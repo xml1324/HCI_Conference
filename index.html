@@ -4,1681 +4,928 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HCI 학술대회 일정 대시보드</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d1117;
-    --bg2: #161b22;
-    --bg3: #21262d;
-    --border: #30363d;
-    --text: #e6edf3;
-    --text2: #8b949e;
-    --text3: #6e7681;
-    --accent: #58a6ff;
-    --accent2: #3fb950;
-    --accent3: #f78166;
-    --gold: #e3b341;
-    --purple: #bc8cff;
-    --teal: #39d353;
-    --red: #f85149;
-    --orange: #d29922;
-    --pink: #db61a2;
-    --radius: 8px;
-    --radius-lg: 12px;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 0;
-  }
-
-  /* HEADER */
-  .header {
-    background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 2rem 2.5rem 1.5rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(12px);
-  }
-
-  .header-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1.2rem;
-  }
-
-  .header-title-block h1 {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1.7rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 0.25rem;
-  }
-
-  .header-title-block p {
-    color: var(--text2);
-    font-size: 0.82rem;
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  .header-stats {
-    display: flex;
-    gap: 1.2rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .stat-chip {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0.45rem 0.9rem;
-  }
-
-  .stat-chip span:first-child {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--accent);
-  }
-
-  .stat-chip span:last-child {
-    font-size: 0.7rem;
-    color: var(--text2);
-  }
-
-  /* CONTROLS */
-  .controls {
-    display: flex;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .filter-group {
-    display: flex;
-    gap: 0.4rem;
-    align-items: center;
-  }
-
-  .filter-label {
-    font-size: 0.72rem;
-    color: var(--text3);
-    font-family: 'IBM Plex Mono', monospace;
-    white-space: nowrap;
-  }
-
-  .filter-btn {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    padding: 0.3rem 0.7rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'Noto Sans KR', sans-serif;
-    white-space: nowrap;
-  }
-
-  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
-
-  .search-wrap {
-    position: relative;
-    flex: 1;
-    min-width: 160px;
-    max-width: 280px;
-  }
-
-  .search-icon {
-    position: absolute;
-    left: 0.7rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text3);
-    font-size: 0.85rem;
-  }
-
-  #searchInput {
-    width: 100%;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 0.35rem 0.8rem 0.35rem 2rem;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-family: 'Noto Sans KR', sans-serif;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
-  #searchInput:focus { border-color: var(--accent); }
-  #searchInput::placeholder { color: var(--text3); }
-
-  .ai-btn {
-    background: linear-gradient(135deg, #2d1b69 0%, #1a1a4e 100%);
-    border: 1px solid var(--purple);
-    color: var(--purple);
-    padding: 0.35rem 1rem;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Noto Sans KR', sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    white-space: nowrap;
-  }
-
-  .ai-btn:hover { background: var(--purple); color: #000; }
-  .ai-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* MAIN CONTENT */
-  .main {
-    padding: 1.5rem 2.5rem 3rem;
-    max-width: 1600px;
-    margin: 0 auto;
-  }
-
-  /* TIMELINE MONTH HEADERS */
-  .month-section { margin-bottom: 0.4rem; }
-
-  .month-header {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 0.6rem 0;
-    margin-bottom: 0.5rem;
-  }
-
-  .month-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    white-space: nowrap;
-  }
-
-  .month-line {
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* CARDS GRID */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 0.9rem;
-    margin-bottom: 1.5rem;
-  }
-
-  /* CONFERENCE CARD */
-  .conf-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.1rem 1.2rem;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.2s;
-    cursor: default;
-  }
-
-  .conf-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(88,166,255,0.08);
-  }
-
-  .conf-card.domestic {
-    border-left: 3px solid var(--accent2);
-  }
-
-  .conf-card.international {
-    border-left: 3px solid var(--accent);
-  }
-
-  .conf-card.hidden { display: none; }
-
-  /* Card accent strip */
-  .card-strip {
-    position: absolute;
-    top: 0; right: 0;
-    width: 3px;
-    height: 100%;
-    opacity: 0.3;
-  }
-
-  .conf-card-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .conf-abbr {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.2;
-  }
-
-  .conf-abbr a {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-
-  .conf-abbr a:hover { color: var(--accent); }
-
-  .conf-badges {
-    display: flex;
-    gap: 0.3rem;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-
-  .badge {
-    font-size: 0.65rem;
-    padding: 0.15rem 0.45rem;
-    border-radius: 4px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .badge-top { background: rgba(227,179,65,0.15); color: var(--gold); border: 1px solid rgba(227,179,65,0.3); }
-  .badge-good { background: rgba(63,185,80,0.1); color: var(--accent2); border: 1px solid rgba(63,185,80,0.25); }
-  .badge-domestic { background: rgba(63,185,80,0.1); color: var(--accent2); border: 1px solid rgba(63,185,80,0.25); }
-  .badge-intl { background: rgba(88,166,255,0.1); color: var(--accent); border: 1px solid rgba(88,166,255,0.25); }
-  .badge-if { background: rgba(188,140,255,0.1); color: var(--purple); border: 1px solid rgba(188,140,255,0.25); }
-  .badge-journal { background: rgba(219,97,162,0.1); color: var(--pink); border: 1px solid rgba(219,97,162,0.25); }
-
-  .conf-name {
-    font-size: 0.82rem;
-    color: var(--text2);
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
-  }
-
-  .conf-scope {
-    font-size: 0.78rem;
-    color: var(--text3);
-    margin-bottom: 0.7rem;
-    line-height: 1.4;
-    padding-left: 0.5rem;
-    border-left: 2px solid var(--border);
-  }
-
-  .conf-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.4rem;
-    margin-top: 0.7rem;
-    padding-top: 0.7rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-  }
-
-  .meta-label {
-    font-size: 0.62rem;
-    color: var(--text3);
-    font-family: 'IBM Plex Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .meta-value {
-    font-size: 0.78rem;
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  .meta-value.deadline {
-    color: var(--accent3);
-  }
-
-  .meta-value.deadline.passed {
-    color: var(--text3);
-    text-decoration: line-through;
-  }
-
-  .meta-value.date {
-    color: var(--accent2);
-  }
-
-  .conf-link-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    margin-top: 0.7rem;
-    font-size: 0.72rem;
-    color: var(--accent);
-    text-decoration: none;
-    padding: 0.25rem 0.6rem;
-    border: 1px solid rgba(88,166,255,0.3);
-    border-radius: 4px;
-    transition: all 0.15s;
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  .conf-link-btn:hover {
-    background: rgba(88,166,255,0.1);
-    border-color: var(--accent);
-  }
-
-  /* AI Panel */
-  .ai-panel {
-    background: var(--bg2);
-    border: 1px solid var(--purple);
-    border-radius: var(--radius-lg);
-    padding: 1.2rem 1.5rem;
-    margin-bottom: 1.5rem;
-    display: none;
-  }
-
-  .ai-panel.visible { display: block; }
-
-  .ai-panel-header {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-bottom: 0.8rem;
-    color: var(--purple);
-    font-size: 0.85rem;
-    font-weight: 600;
-  }
-
-  .ai-input-row {
-    display: flex;
-    gap: 0.6rem;
-    margin-bottom: 0.8rem;
-  }
-
-  .ai-query-input {
-    flex: 1;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 0.5rem 0.8rem;
-    border-radius: var(--radius);
-    font-size: 0.82rem;
-    font-family: 'Noto Sans KR', sans-serif;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
-  .ai-query-input:focus { border-color: var(--purple); }
-
-  .ai-submit-btn {
-    background: var(--purple);
-    border: none;
-    color: #000;
-    padding: 0.5rem 1.2rem;
-    border-radius: var(--radius);
-    font-size: 0.82rem;
-    cursor: pointer;
-    font-weight: 600;
-    font-family: 'Noto Sans KR', sans-serif;
-    transition: opacity 0.15s;
-  }
-
-  .ai-submit-btn:hover { opacity: 0.85; }
-  .ai-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .ai-result {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem;
-    font-size: 0.82rem;
-    line-height: 1.7;
-    white-space: pre-wrap;
-    color: var(--text);
-    max-height: 400px;
-    overflow-y: auto;
-    display: none;
-  }
-
-  .ai-result.visible { display: block; }
-
-  .ai-loading {
-    display: none;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--purple);
-    font-size: 0.8rem;
-  }
-
-  .ai-loading.visible { display: flex; }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .spinner {
-    width: 14px; height: 14px;
-    border: 2px solid rgba(188,140,255,0.3);
-    border-top-color: var(--purple);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  /* Sort controls */
-  .sort-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .sort-bar span {
-    font-size: 0.72rem;
-    color: var(--text3);
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  .sort-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text2);
-    padding: 0.25rem 0.6rem;
-    border-radius: 4px;
-    font-size: 0.72rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  .sort-btn:hover { border-color: var(--accent2); color: var(--accent2); }
-  .sort-btn.active { border-color: var(--accent2); color: var(--accent2); background: rgba(63,185,80,0.08); }
-
-  /* Count bar */
-  .count-bar {
-    font-size: 0.75rem;
-    color: var(--text3);
-    font-family: 'IBM Plex Mono', monospace;
-    margin-bottom: 0.8rem;
-  }
-
-  .count-bar span { color: var(--accent); font-weight: 600; }
-
-  /* Table view toggle */
-  .view-toggle {
-    display: flex;
-    gap: 0.3rem;
-  }
-
-  .view-btn {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    padding: 0.3rem 0.55rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .view-btn.active { background: var(--accent); border-color: var(--accent); color: #000; }
-
-  /* TABLE VIEW */
-  .table-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    display: none;
-  }
-
-  .table-wrap.visible { display: block; }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8rem;
-  }
-
-  th {
-    background: var(--bg3);
-    padding: 0.7rem 1rem;
-    text-align: left;
-    color: var(--text2);
-    font-size: 0.7rem;
-    font-family: 'IBM Plex Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  th:hover { color: var(--accent); }
-
-  td {
-    padding: 0.65rem 1rem;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
-
-  tr:last-child td { border-bottom: none; }
-
-  tr:hover td { background: rgba(255,255,255,0.02); }
-
-  tr.domestic-row td:first-child { border-left: 2px solid var(--accent2); }
-  tr.international-row td:first-child { border-left: 2px solid var(--accent); }
-  tr.hidden-row { display: none; }
-
-  .tbl-abbr { font-family: 'IBM Plex Mono', monospace; font-weight: 600; white-space: nowrap; }
-  .tbl-abbr a { color: var(--text); text-decoration: none; }
-  .tbl-abbr a:hover { color: var(--accent); }
-  .tbl-name { color: var(--text2); font-size: 0.77rem; }
-  .tbl-date { color: var(--accent2); font-family: 'IBM Plex Mono', monospace; white-space: nowrap; font-size: 0.77rem; }
-  .tbl-deadline { color: var(--accent3); font-family: 'IBM Plex Mono', monospace; white-space: nowrap; font-size: 0.77rem; }
-  .tbl-deadline.passed { color: var(--text3); text-decoration: line-through; }
-  .tbl-scope { color: var(--text3); max-width: 220px; font-size: 0.75rem; }
-
-  /* footer */
-  .footer {
-    text-align: center;
-    padding: 2rem;
-    color: var(--text3);
-    font-size: 0.72rem;
-    font-family: 'IBM Plex Mono', monospace;
-    border-top: 1px solid var(--border);
-    margin-top: 2rem;
-  }
-
-  /* legend */
-  .legend {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding: 0.7rem 1rem;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 0.72rem;
-  }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: var(--text2);
-  }
-
-  .legend-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-  }
-
-  @media (max-width: 768px) {
-    .header { padding: 1.2rem 1rem 1rem; }
-    .main { padding: 1rem 1rem 2rem; }
-    .header-top { flex-direction: column; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .header-title-block h1 { font-size: 1.3rem; }
-  }
-
-  /* Update timestamp */
-  .update-tag {
-    font-size: 0.67rem;
-    color: var(--text3);
-    font-family: 'IBM Plex Mono', monospace;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    padding: 0.15rem 0.45rem;
-    border-radius: 4px;
-    margin-left: 0.4rem;
-  }
-
-  /* Countdown */
-  .countdown {
-    font-size: 0.65rem;
-    color: var(--text3);
-    font-family: 'IBM Plex Mono', monospace;
-    margin-top: 0.1rem;
-  }
-  .countdown.soon { color: var(--orange); }
-  .countdown.urgent { color: var(--red); }
-  .countdown.passed { color: var(--text3); }
+:root {
+  --bg:#080c12; --bg2:#0e1420; --bg3:#161d2e; --bg4:#1c2540;
+  --border:#232e45; --border2:#2e3d5a;
+  --text:#dce8f5; --text2:#8aa0be; --text3:#4d6080;
+  --accent:#4da6ff; --green:#3ddc84; --red:#ff5f5f;
+  --gold:#ffc947; --purple:#b07fff; --orange:#ff8c42;
+  --teal:#2dd4bf; --pink:#e879a0;
+  --r:8px; --rl:14px;
+  --acm:#1068d9; --ieee:#00a0e3; --usenix:#e05c1a; --eg:#6abf69; --kr:#3ddc84;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* MAP */
+.map-section{position:relative;background:linear-gradient(180deg,#0a1020 0%,#080c16 100%);border-bottom:1px solid var(--border);overflow:hidden}
+#worldMap{width:100%;height:230px;display:block}
+.map-title-overlay{position:absolute;top:16px;left:24px;z-index:10}
+.map-title-overlay h1{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--text);line-height:1.1}
+.map-title-overlay p{font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--text3);margin-top:4px}
+.map-legend-overlay{position:absolute;bottom:10px;right:12px;display:flex;gap:10px;z-index:10;flex-wrap:wrap;justify-content:flex-end}
+.map-org-dot{display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:0.63rem;color:var(--text3)}
+.map-org-dot::before{content:'';width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.map-org-dot.acm::before{background:var(--acm);box-shadow:0 0 6px var(--acm)}
+.map-org-dot.ieee::before{background:var(--ieee);box-shadow:0 0 6px var(--ieee)}
+.map-org-dot.usenix::before{background:var(--usenix);box-shadow:0 0 6px var(--usenix)}
+.map-org-dot.kr::before{background:var(--kr);box-shadow:0 0 6px var(--kr)}
+.map-tooltip{position:absolute;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:7px 11px;font-size:0.7rem;font-family:'JetBrains Mono',monospace;color:var(--text);pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:50;white-space:nowrap;backdrop-filter:blur(8px)}
+.map-tooltip.vis{opacity:1}
+.map-tooltip b{color:var(--accent);display:block;margin-bottom:2px}
+@keyframes pulse-ring{0%{opacity:.7;r:4}100%{opacity:0;r:14}}
+.venue-ring{animation:pulse-ring 2.5s ease-out infinite;transform-origin:center}
+.update-tag{font-size:.63rem;color:var(--text3);font-family:'JetBrains Mono',monospace;background:var(--bg3);border:1px solid var(--border);padding:.1rem .4rem;border-radius:4px;margin-left:.4rem}
+
+/* CONTROLS BAR */
+.controls-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:.65rem 1.8rem;position:sticky;top:0;z-index:100;backdrop-filter:blur(16px);display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.header-stats{display:flex;gap:.6rem;margin-right:.3rem}
+.stat-chip{display:flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:.2rem .65rem}
+.stat-chip b{font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:600;color:var(--accent)}
+.stat-chip span{font-size:.65rem;color:var(--text3)}
+.search-wrap{position:relative;min-width:145px;max-width:230px;flex:1}
+.search-icon{position:absolute;left:.6rem;top:50%;transform:translateY(-50%);font-size:.78rem;color:var(--text3);pointer-events:none}
+#searchInput{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:.28rem .65rem .28rem 1.9rem;border-radius:20px;font-size:.73rem;font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .15s}
+#searchInput:focus{border-color:var(--accent)}
+#searchInput::placeholder{color:var(--text3)}
+.div{width:1px;height:18px;background:var(--border);flex-shrink:0}
+.filter-group{display:flex;gap:.28rem;align-items:center}
+.filter-label{font-size:.62rem;color:var(--text3);font-family:'JetBrains Mono',monospace;white-space:nowrap;margin-right:1px}
+.filter-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:.2rem .6rem;border-radius:20px;font-size:.7rem;cursor:pointer;transition:all .15s;font-family:'Noto Sans KR',sans-serif;white-space:nowrap}
+.filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600}
+.icon-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:.26rem .68rem;border-radius:var(--r);font-size:.75rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.3rem;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.icon-btn.purple{border-color:rgba(176,127,255,.35);color:var(--purple)}
+.icon-btn.purple:hover{background:rgba(176,127,255,.1)}
+.icon-btn.orange{border-color:rgba(255,140,66,.35);color:var(--orange)}
+.icon-btn.orange:hover{background:rgba(255,140,66,.1)}
+.view-toggle{display:flex;gap:3px}
+.view-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text3);padding:.26rem .52rem;border-radius:var(--r);font-size:.8rem;cursor:pointer;transition:all .15s}
+.view-btn.active{background:var(--accent);border-color:var(--accent);color:#000}
+
+/* PANELS */
+.panel{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1rem 1.3rem;margin-bottom:.9rem;display:none;animation:slideDown .2s ease}
+.panel.vis{display:block}
+@keyframes slideDown{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.panel-header{font-size:.8rem;font-weight:600;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.panel-row{display:flex;gap:.5rem;margin-bottom:.65rem}
+.panel-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:.42rem .75rem;border-radius:var(--r);font-size:.78rem;font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .15s}
+.panel-input:focus{border-color:var(--purple)}
+.panel-submit{background:var(--purple);border:none;color:#000;padding:.42rem 1rem;border-radius:var(--r);font-size:.78rem;cursor:pointer;font-weight:600;font-family:'Noto Sans KR',sans-serif;transition:opacity .15s}
+.panel-submit:hover{opacity:.85}
+.panel-submit:disabled{opacity:.4;cursor:not-allowed}
+.ai-loading{display:none;align-items:center;gap:.5rem;color:var(--purple);font-size:.75rem;margin-bottom:.5rem}
+.ai-loading.vis{display:flex}
+.ai-result{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:.85rem;font-size:.78rem;line-height:1.75;white-space:pre-wrap;color:var(--text);max-height:360px;overflow-y:auto;display:none}
+.ai-result.vis{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:13px;height:13px;border:2px solid rgba(176,127,255,.25);border-top-color:var(--purple);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0}
+
+/* UPDATE BAR */
+.upd-bar{display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.55rem .9rem;margin-bottom:.85rem;font-size:.74rem;align-items:center;gap:.6rem;flex-wrap:wrap}
+.upd-bar.show{display:flex}
+
+/* MAIN */
+.main{padding:1.1rem 1.8rem 3rem;max-width:1700px;margin:0 auto}
+
+/* LEGEND */
+.legend{display:flex;gap:.9rem;flex-wrap:wrap;align-items:center;margin-bottom:.85rem;padding:.55rem .9rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:.68rem}
+.legend-item{display:flex;align-items:center;gap:.35rem;color:var(--text2)}
+.ldot{width:8px;height:8px;border-radius:50%}
+.badge{font-size:.6rem;padding:.1rem .38rem;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:600;white-space:nowrap}
+.b-top{background:rgba(255,201,71,.12);color:var(--gold);border:1px solid rgba(255,201,71,.3)}
+.b-good{background:rgba(61,220,132,.1);color:var(--green);border:1px solid rgba(61,220,132,.28)}
+.b-dom{background:rgba(61,220,132,.1);color:var(--green);border:1px solid rgba(61,220,132,.28)}
+.b-intl{background:rgba(77,166,255,.1);color:var(--accent);border:1px solid rgba(77,166,255,.25)}
+.b-if{background:rgba(176,127,255,.1);color:var(--purple);border:1px solid rgba(176,127,255,.25)}
+.b-journal{background:rgba(232,121,160,.1);color:var(--pink);border:1px solid rgba(232,121,160,.25)}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.85rem;flex-wrap:wrap}
+.sort-group{display:flex;align-items:center;gap:.35rem}
+.sort-label{font-size:.65rem;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.sort-btn{background:transparent;border:1px solid var(--border);color:var(--text2);padding:.18rem .52rem;border-radius:4px;font-size:.68rem;cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace}
+.sort-btn:hover{border-color:var(--green);color:var(--green)}
+.sort-btn.active{border-color:var(--green);color:var(--green);background:rgba(61,220,132,.07)}
+.count-bar{font-size:.7rem;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.count-bar span{color:var(--accent);font-weight:600}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(305px,1fr));gap:.95rem}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.conf-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s;animation:cardIn .3s ease both}
+.conf-card:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.conf-card.hidden{display:none}
+
+/* VENUE BANNER */
+.vbanner{display:flex;align-items:center;justify-content:space-between;padding:.55rem .85rem .5rem;border-bottom:1px solid var(--border)}
+.vbanner.acm{background:linear-gradient(135deg,rgba(16,104,217,.22) 0%,rgba(16,104,217,.06) 100%);border-bottom-color:rgba(16,104,217,.2)}
+.vbanner.ieee{background:linear-gradient(135deg,rgba(0,160,227,.2) 0%,rgba(0,160,227,.05) 100%);border-bottom-color:rgba(0,160,227,.18)}
+.vbanner.usenix{background:linear-gradient(135deg,rgba(224,92,26,.2) 0%,rgba(224,92,26,.05) 100%);border-bottom-color:rgba(224,92,26,.18)}
+.vbanner.eg{background:linear-gradient(135deg,rgba(106,191,105,.18) 0%,rgba(106,191,105,.05) 100%);border-bottom-color:rgba(106,191,105,.18)}
+.vbanner.kr{background:linear-gradient(135deg,rgba(61,220,132,.16) 0%,rgba(61,220,132,.04) 100%);border-bottom-color:rgba(61,220,132,.18)}
+.vleft{display:flex;align-items:center;gap:.55rem}
+.vflag-img{width:34px;height:auto;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.5);flex-shrink:0;object-fit:cover}
+.vcity{font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;color:var(--text);line-height:1.1}
+.vcountry{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.vright{display:flex;align-items:center;gap:.45rem}
+.org-badge{font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:600;padding:.12rem .4rem;border-radius:4px;text-transform:uppercase;letter-spacing:.04em}
+.ob-acm{background:rgba(16,104,217,.25);color:#7ab5ff;border:1px solid rgba(16,104,217,.4)}
+.ob-ieee{background:rgba(0,160,227,.2);color:#62d2f5;border:1px solid rgba(0,160,227,.35)}
+.ob-usenix{background:rgba(224,92,26,.2);color:#ff9e65;border:1px solid rgba(224,92,26,.35)}
+.ob-eg{background:rgba(106,191,105,.2);color:#93d992;border:1px solid rgba(106,191,105,.35)}
+.ob-kr{background:rgba(61,220,132,.15);color:var(--green);border:1px solid rgba(61,220,132,.3)}
+.vfavicon{width:20px;height:20px;border-radius:4px;opacity:.85}
+
+/* CARD BODY */
+.cbody{padding:.75rem .85rem .85rem}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem;margin-bottom:.28rem}
+.abbr-text{font-family:'Syne',sans-serif;font-size:.98rem;font-weight:700;color:var(--text)}
+.abbr-text a{color:inherit;text-decoration:none;transition:color .15s}
+.abbr-text a:hover{color:var(--accent)}
+.card-badges{display:flex;gap:.22rem;flex-wrap:wrap;justify-content:flex-end}
+.conf-name{font-size:.74rem;color:var(--text2);margin-bottom:.38rem;line-height:1.4}
+.conf-scope{font-size:.72rem;color:var(--text3);margin-bottom:.65rem;line-height:1.45;padding-left:.45rem;border-left:2px solid var(--border2)}
+.conf-meta{display:grid;grid-template-columns:1fr 1fr;gap:.38rem;padding-top:.6rem;border-top:1px solid var(--border)}
+.meta-item{display:flex;flex-direction:column;gap:2px}
+.meta-label{font-size:.58rem;color:var(--text3);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.05em}
+.meta-val{font-size:.71rem;font-family:'JetBrains Mono',monospace;color:var(--text)}
+.meta-val.date{color:var(--green)}
+.meta-val.deadline{color:#ff8c69}
+.meta-val.deadline.passed{color:var(--text3);text-decoration:line-through}
+.countdown{font-size:.6rem;font-family:'JetBrains Mono',monospace;margin-top:1px}
+.cd-soon{color:var(--orange)}
+.cd-urgent{color:var(--red)}
+.cd-passed{color:var(--text3)}
+.link-btn{display:inline-flex;align-items:center;gap:.28rem;margin-top:.6rem;font-size:.68rem;color:var(--accent);text-decoration:none;padding:.2rem .55rem;border:1px solid rgba(77,166,255,.28);border-radius:4px;transition:all .15s;font-family:'JetBrains Mono',monospace}
+.link-btn:hover{background:rgba(77,166,255,.1);border-color:var(--accent)}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rl);display:none}
+.table-wrap.vis{display:block}
+table{width:100%;border-collapse:collapse;font-size:.76rem}
+th{background:var(--bg3);padding:.62rem .85rem;text-align:left;color:var(--text2);font-size:.65rem;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--accent)}
+td{padding:.58rem .85rem;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.015)}
+.empty-state{color:var(--text3);font-size:.82rem;padding:2.5rem;grid-column:1/-1;text-align:center}
+
+/* FOOTER */
+.footer{text-align:center;padding:1.8rem 1rem;color:var(--text3);font-size:.65rem;font-family:'JetBrains Mono',monospace;border-top:1px solid var(--border);margin-top:2rem;line-height:1.8}
+
+@media(max-width:700px){
+  .controls-bar{padding:.55rem 1rem}
+  .main{padding:.9rem 1rem 2rem}
+  .cards-grid{grid-template-columns:1fr}
+  #worldMap{height:175px}
+  .map-title-overlay h1{font-size:1.15rem}
+  .header-stats{display:none}
+}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 </head>
 <body>
 
-<header class="header">
-  <div class="header-top">
-    <div class="header-title-block">
-      <h1>🖥 HCI 학술대회 일정</h1>
-      <p>국내외 HCI/그래픽스/인터랙션 학술대회 통합 일정표 <span class="update-tag" id="lastUpdated">2026-03-15 기준</span></p>
-    </div>
-    <div class="header-stats">
-      <div class="stat-chip"><span id="totalCount">27</span><span>총 학회</span></div>
-      <div class="stat-chip"><span id="intlCount">21</span><span>국외</span></div>
-      <div class="stat-chip"><span id="domCount">6</span><span>국내</span></div>
-      <div class="stat-chip"><span id="upcomingCount">-</span><span>D-60 내 마감</span></div>
-    </div>
+<!-- WORLD MAP -->
+<div class="map-section">
+  <div class="map-title-overlay">
+    <h1>🌐 HCI 학술대회</h1>
+    <p>국내외 학술대회 통합 일정표 <span class="update-tag" id="lastUpdated">2026-03-15 기준</span></p>
   </div>
-  <div class="controls">
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="학회명, 약자 검색...">
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">분류</span>
-      <button class="filter-btn active" data-filter="all">전체</button>
-      <button class="filter-btn" data-filter="international">국외</button>
-      <button class="filter-btn" data-filter="domestic">국내</button>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">등급</span>
-      <button class="filter-btn" data-rank="최우수">최우수</button>
-      <button class="filter-btn" data-rank="우수">우수</button>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">저널</span>
-      <button class="filter-btn" data-journal="PACMHCI">PACMHCI</button>
-      <button class="filter-btn" data-journal="IMWUT">IMWUT</button>
-      <button class="filter-btn" data-journal="TVCG">TVCG</button>
-      <button class="filter-btn" data-journal="CGF">CGF</button>
-    </div>
-    <button class="ai-btn" id="autoUpdateBtn" onclick="manualAutoUpdate()">🔄 <span id="autoUpdateLabel">최신 정보 동기화</span></button>
-    <button class="ai-btn" id="aiToggle" onclick="toggleAIPanel()">✨ AI 질문</button>
-    <button class="ai-btn" style="border-color:var(--text3);color:var(--text3);padding:0.35rem 0.7rem" onclick="toggleSettings()">⚙</button>
-    <div class="view-toggle">
-      <button class="view-btn active" id="cardViewBtn" onclick="switchView('card')">⊞</button>
-      <button class="view-btn" id="tableViewBtn" onclick="switchView('table')">☰</button>
-    </div>
+  <svg id="worldMap" viewBox="0 0 900 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+    <rect width="900" height="240" fill="#080e1c"/>
+    <g id="mapCountries"></g>
+    <g id="mapGraticule" stroke="#1a2540" stroke-width="0.4" fill="none" opacity="0.5"></g>
+    <g id="venueDots"></g>
+  </svg>
+  <div class="map-legend-overlay">
+    <div class="map-org-dot acm">ACM</div>
+    <div class="map-org-dot ieee">IEEE</div>
+    <div class="map-org-dot usenix">USENIX</div>
+    <div class="map-org-dot kr">국내</div>
   </div>
-</header>
+  <div class="map-tooltip" id="mapTip"></div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls-bar">
+  <div class="header-stats">
+    <div class="stat-chip"><b id="totalCount">28</b><span>학회</span></div>
+    <div class="stat-chip"><b id="upcomingCount">-</b><span>D-60↓</span></div>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="학회명, 약자 검색...">
+  </div>
+  <div class="div"></div>
+  <div class="filter-group">
+    <span class="filter-label">분류</span>
+    <button class="filter-btn active" data-filter="all">전체</button>
+    <button class="filter-btn" data-filter="international">국외</button>
+    <button class="filter-btn" data-filter="domestic">국내</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">등급</span>
+    <button class="filter-btn" data-rank="최우수">최우수</button>
+    <button class="filter-btn" data-rank="우수">우수</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">저널</span>
+    <button class="filter-btn" data-journal="PACMHCI">PACMHCI</button>
+    <button class="filter-btn" data-journal="IMWUT">IMWUT</button>
+    <button class="filter-btn" data-journal="TVCG">TVCG</button>
+    <button class="filter-btn" data-journal="CGF">CGF</button>
+  </div>
+  <div class="div"></div>
+  <button class="icon-btn orange" id="autoUpdateBtn" onclick="manualAutoUpdate()">🔄 <span id="autoUpdateLabel">동기화</span></button>
+  <button class="icon-btn purple" onclick="toggleAIPanel()">✨ AI 질문</button>
+  <button class="icon-btn" style="padding:.26rem .55rem" onclick="toggleSettings()">⚙</button>
+  <div class="view-toggle">
+    <button class="view-btn active" id="cardViewBtn" onclick="switchView('card')">⊞</button>
+    <button class="view-btn" id="tableViewBtn" onclick="switchView('table')">☰</button>
+  </div>
+</div>
 
 <main class="main">
-  <!-- AI Panel -->
-  <div class="ai-panel" id="aiPanel">
-    <div class="ai-panel-header">✨ AI 최신 정보 검색 <span style="font-weight:400; color: var(--text3); font-size:0.75rem;">(Anthropic API 사용)</span></div>
-    <div class="ai-input-row">
-      <input type="text" class="ai-query-input" id="aiQuery" placeholder="예: CHI 2027 제출 마감일은? / UIST 2026 개최 장소는? / 최신 HCI 학회 추천..." />
-      <button class="ai-submit-btn" id="aiSubmit" onclick="askAI()">검색</button>
+
+  <!-- Settings panel -->
+  <div class="panel" id="settingsPanel">
+    <div class="panel-header" style="color:var(--text2)">⚙ Anthropic API Key</div>
+    <p style="font-size:.74rem;color:var(--text3);margin-bottom:.75rem;line-height:1.6">
+      자동 업데이트·AI 질문에 사용됩니다. 키는 브라우저 <code style="background:var(--bg3);padding:.1rem .3rem;border-radius:3px;font-size:.7rem">localStorage</code>에만 저장됩니다.<br>
+      발급: <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--accent)">console.anthropic.com</a>
+    </p>
+    <div class="panel-row">
+      <input type="password" class="panel-input" id="apiKeyInput" placeholder="sk-ant-..." style="font-family:'JetBrains Mono',monospace;font-size:.76rem"/>
+      <button class="panel-submit" onclick="saveApiKey()" style="background:var(--text2);color:var(--bg)">저장</button>
     </div>
-    <div class="ai-loading" id="aiLoading"><div class="spinner"></div> AI가 최신 정보를 검색 중입니다...</div>
+    <div id="apiKeyStatus" style="font-size:.7rem;color:var(--text3);font-family:'JetBrains Mono',monospace"></div>
+  </div>
+
+  <!-- AI panel -->
+  <div class="panel" id="aiPanel" style="border-color:rgba(176,127,255,.35)">
+    <div class="panel-header" style="color:var(--purple)">✨ AI 최신 정보 검색 <span style="font-weight:400;color:var(--text3);font-size:.7rem">(웹 검색 포함)</span></div>
+    <div class="panel-row">
+      <input type="text" class="panel-input" id="aiQuery" placeholder="예: CHI 2027 장소? / UIST 2026 마감? / 보안 HCI 학회 추천"/>
+      <button class="panel-submit" id="aiSubmit" onclick="askAI()">검색</button>
+    </div>
+    <div class="ai-loading" id="aiLoading"><div class="spinner"></div> AI가 웹 검색 중...</div>
     <div class="ai-result" id="aiResult"></div>
   </div>
 
-  <!-- Settings Panel -->
-  <div class="ai-panel" id="settingsPanel" style="border-color:var(--text3)">
-    <div class="ai-panel-header" style="color:var(--text2)">⚙ 설정 — Anthropic API Key</div>
-    <p style="font-size:0.78rem;color:var(--text3);margin-bottom:0.8rem;line-height:1.6">
-      자동 업데이트 및 AI 질문 기능에 사용됩니다. 키는 이 브라우저의 <code style="background:var(--bg3);padding:0.1rem 0.3rem;border-radius:3px">localStorage</code>에만 저장되며 외부로 전송되지 않습니다.<br>
-      키 발급: <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--accent)">console.anthropic.com</a>
-    </p>
-    <div class="ai-input-row">
-      <input type="password" class="ai-query-input" id="apiKeyInput" placeholder="sk-ant-..." style="font-family:'IBM Plex Mono',monospace;font-size:0.8rem" />
-      <button class="ai-submit-btn" onclick="saveApiKey()" style="background:var(--text2)">저장</button>
-    </div>
-    <div id="apiKeyStatus" style="font-size:0.75rem;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-top:0.3rem"></div>
+  <!-- Update bar -->
+  <div class="upd-bar" id="updBar">
+    <div class="spinner" id="updSpinner" style="display:none"></div>
+    <span id="updStatus" style="color:var(--text2)"></span>
+    <span id="updProgress" style="color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:.68rem"></span>
+    <div id="updChanges" style="font-size:.7rem;color:var(--green);display:none;width:100%"></div>
   </div>
 
-  <!-- Auto-update status bar -->
-  <div id="autoUpdateBar" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:0.7rem 1rem;margin-bottom:1rem;font-size:0.78rem">
-    <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap">
-      <div class="spinner" id="autoUpdateSpinner" style="display:none"></div>
-      <span id="autoUpdateStatus" style="color:var(--text2)"></span>
-      <span id="autoUpdateProgress" style="color:var(--text3);font-family:'IBM Plex Mono',monospace;font-size:0.72rem"></span>
-    </div>
-    <div id="autoUpdateChanges" style="margin-top:0.5rem;font-size:0.75rem;color:var(--accent2);display:none"></div>
-  </div>
+  <!-- Legend -->
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>국외 학회</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div>국내 학회</div>
-    <div class="legend-item"><span class="badge badge-top">최우수</span>정보과학회 등재 최우수</div>
-    <div class="legend-item"><span class="badge badge-good">우수</span>정보과학회 등재 우수</div>
-    <div class="legend-item"><span class="badge badge-if">IF 4</span>BK21 우수학회 대체인정 Impact Factor</div>
-    <div class="legend-item"><span class="badge badge-journal">PACMHCI</span><span class="badge badge-journal">IMWUT</span><span class="badge badge-journal">TVCG</span><span class="badge badge-journal">CGF</span>저널 결합형</div>
+    <div class="legend-item"><div class="ldot" style="background:var(--accent)"></div>국외</div>
+    <div class="legend-item"><div class="ldot" style="background:var(--green)"></div>국내</div>
+    <div class="legend-item"><span class="badge b-top">최우수</span>정보과학회 등재 최우수</div>
+    <div class="legend-item"><span class="badge b-good">우수</span>정보과학회 등재 우수</div>
+    <div class="legend-item"><span class="badge b-if">IF 4</span>BK21 우수학회 대체인정 IF</div>
+    <div class="legend-item"><span class="badge b-journal">PACMHCI</span><span class="badge b-journal" style="margin-left:3px">IMWUT</span><span class="badge b-journal" style="margin-left:3px">TVCG</span><span class="badge b-journal" style="margin-left:3px">CGF</span> 저널 결합형</div>
   </div>
 
-  <!-- Sort Bar -->
-  <div class="sort-bar">
-    <span>정렬:</span>
-    <button class="sort-btn active" data-sort="deadline">논문 마감순</button>
-    <button class="sort-btn" data-sort="date">개최 시기순</button>
-    <button class="sort-btn" data-sort="name">이름순</button>
-    <button class="sort-btn" data-sort="if">IF순</button>
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="sort-group">
+      <span class="sort-label">정렬:</span>
+      <button class="sort-btn active" data-sort="deadline">마감순</button>
+      <button class="sort-btn" data-sort="date">개최순</button>
+      <button class="sort-btn" data-sort="name">이름순</button>
+      <button class="sort-btn" data-sort="if">IF순</button>
+    </div>
+    <div class="count-bar"><span id="visibleCount">28</span>개 학회</div>
   </div>
 
-  <div class="count-bar" id="countBar">총 <span id="visibleCount">27</span>개 학회 표시 중</div>
-
-  <!-- Cards View -->
   <div id="cardView" class="cards-grid"></div>
 
-  <!-- Table View -->
   <div id="tableView" class="table-wrap">
     <table>
-      <thead>
-        <tr>
-          <th onclick="sortTable('abbr')">약자 ↕</th>
-          <th onclick="sortTable('name')">학회명 ↕</th>
-          <th onclick="sortTable('scope')">Scope</th>
-          <th onclick="sortTable('date')">개최 시기 ↕</th>
-          <th onclick="sortTable('deadline')">논문 마감 ↕</th>
-          <th onclick="sortTable('bk')">BK21</th>
-          <th onclick="sortTable('if')">IF ↕</th>
-          <th>저널</th>
-        </tr>
-      </thead>
+      <thead><tr>
+        <th></th>
+        <th onclick="tblSort('abbr')">약자</th>
+        <th onclick="tblSort('name')">학회명 / 장소</th>
+        <th>Scope</th>
+        <th onclick="tblSort('date')">개최 ↕</th>
+        <th onclick="tblSort('deadline')">마감 ↕</th>
+        <th onclick="tblSort('bk')">등급</th>
+        <th onclick="tblSort('if')">IF ↕</th>
+        <th>저널</th>
+      </tr></thead>
       <tbody id="tableBody"></tbody>
     </table>
   </div>
 </main>
 
 <footer class="footer">
-  HCI 학술대회 일정 대시보드 · 2026 · 정보 출처: 각 학회 공식 웹사이트 및 ACM/IEEE DL<br>
-  ⚠️ 마감일은 매년 변경될 수 있으므로 반드시 공식 웹사이트에서 확인하세요. AI 최신 정보 검색 기능으로 최신 정보를 확인하세요.
+  HCI 학술대회 일정 대시보드 · 2026 · 출처: 각 학회 공식 웹사이트 · hci-deadlines.github.io<br>
+  ⚠ 마감일은 매년 변경됩니다. AI 동기화 기능으로 항상 최신 정보를 확인하세요.
 </footer>
 
 <script>
-const TODAY = new Date('2026-03-15');
+// ── Venue data ────────────────────────────────────────────────
+const venueData = {
+  chi:          {city:'Barcelona',     country:'Spain',       cc:'es', lat:41.4,  lon:2.2,   org:'ACM'},
+  ieeeVR:       {city:'Daegu',         country:'South Korea', cc:'kr', lat:35.9,  lon:128.6, org:'IEEE'},
+  iui:          {city:'Paphos',        country:'Cyprus',      cc:'cy', lat:34.8,  lon:32.4,  org:'ACM'},
+  siggraph:     {city:'Los Angeles',   country:'USA',         cc:'us', lat:34.0,  lon:-118.2,org:'ACM'},
+  eics:         {city:'Patras',        country:'Greece',      cc:'gr', lat:38.2,  lon:21.7,  org:'ACM'},
+  cui:          {city:'Bremen',        country:'Germany',     cc:'de', lat:53.1,  lon:8.8,   org:'ACM'},
+  vis:          {city:'TBD',           country:'',            cc:'',   lat:0,     lon:0,     org:'IEEE'},
+  uist:         {city:'Detroit',       country:'USA',         cc:'us', lat:42.3,  lon:-83.0, org:'ACM'},
+  ismar:        {city:'Bari',          country:'Italy',       cc:'it', lat:41.1,  lon:16.9,  org:'IEEE'},
+  mm:           {city:'Rio de Janeiro',country:'Brazil',      cc:'br', lat:-22.9, lon:-43.2, org:'ACM'},
+  ubicomp:      {city:'York',          country:'UK',          cc:'gb', lat:53.9,  lon:-1.1,  org:'ACM'},
+  icmi:         {city:'Naples',        country:'Italy',       cc:'it', lat:40.8,  lon:14.3,  org:'ACM'},
+  siggraph_asia:{city:'Kuala Lumpur',  country:'Malaysia',    cc:'my', lat:3.1,   lon:101.7, org:'ACM'},
+  cscw:         {city:'Salt Lake City',country:'USA',         cc:'us', lat:40.8,  lon:-111.9,org:'ACM'},
+  percom:       {city:'TBD',           country:'',            cc:'',   lat:0,     lon:0,     org:'IEEE'},
+  mobilehci:    {city:'TBD',           country:'',            cc:'',   lat:0,     lon:0,     org:'ACM'},
+  whc:          {city:'TBD',           country:'',            cc:'',   lat:0,     lon:0,     org:'IEEE'},
+  chiplay:      {city:'York',          country:'UK',          cc:'gb', lat:53.9,  lon:-1.1,  org:'ACM'},
+  eurovis:      {city:'TBD',           country:'',            cc:'',   lat:0,     lon:0,     org:'EG'},
+  vrst:         {city:'TBD',           country:'',            cc:'',   lat:0,     lon:0,     org:'ACM'},
+  iss:          {city:'TBD',           country:'',            cc:'',   lat:0,     lon:0,     org:'ACM'},
+  soups:        {city:'Hannover',      country:'Germany',     cc:'de', lat:52.4,  lon:9.7,   org:'USENIX'},
+  esk_spring:   {city:'Korea',         country:'South Korea', cc:'kr', lat:37.2,  lon:127.2, org:'KR'},
+  esk_fall:     {city:'Korea',         country:'South Korea', cc:'kr', lat:37.2,  lon:127.2, org:'KR'},
+  kcc:          {city:'Korea',         country:'South Korea', cc:'kr', lat:37.5,  lon:126.9, org:'KR'},
+  ksc:          {city:'Korea',         country:'South Korea', cc:'kr', lat:37.5,  lon:126.9, org:'KR'},
+  hcikorea:     {city:'Korea',         country:'South Korea', cc:'kr', lat:37.8,  lon:127.2, org:'KR'},
+  haptics_kr:   {city:'Korea',         country:'South Korea', cc:'kr', lat:37.2,  lon:127.4, org:'KR'},
+};
 
-// ── 검증 기준일: 2026-03-15 ──
-// 수정 사항 요약:
-// - SIGGRAPH 2026: 7/19-23 LA 확정, 마감 1/22 (완료)
-// - SIGGRAPH Asia 2026: 12/1-4 쿠알라룸푸르 확정
-// - UbiComp/ISWC 2026: 11/2-5 요크(영국) 확정 (이전 정보 오류)
-// - IEEE VIS 2026: 초록 3/21, 논문 3/31 확정
-// - IEEE VR 2026: 3/21-25 대구 — 이미 개최 완료
-// - IUI 2026: 3/23-26 파포스(키프로스) — 이미 개최 완료
-// - ACM MM 2026: 11/10-14 리우데자네이루, 초록 마감 3/25
-// - CSCW 2026: 10/10-14 솔트레이크시티, 주요 마감 5/2025 완료, 롤링 전환 중
-// - CUI 2026: 7/21-24 브레멘(독일) 확정
-// - EICS 2026: 6/30-7/3 파트라스(그리스) 확정 — 포르토가 아님
-// - ICMI 2026: 10/5-9 나폴리(이탈리아) 확정
-// - CHI PLAY 2026: 11/2-5 요크(영국) 확정
-// - MobileHCI 2026: 2026년 일정 미확정 (hci-deadlines는 2025 데이터 표시 중)
-// - ISS 2026: 롤링 마감
-
+// ── Conference data ───────────────────────────────────────────
 const conferences = [
-  // ─── 국외 ───
-  {
-    id: 'chi',
-    abbr: 'CHI',
-    name: 'ACM CHI',
-    fullName: 'ACM Conference on Human Factors in Computing Systems',
-    scope: 'HCI 분야 메인 학회, 인터랙션 전 분야',
-    category: 'international',
-    bk21: '최우수',
-    if: 4,
-    dateMonth: 4,
-    dateLabel: '2026년 4월 13-17일 · 바르셀로나, 스페인',
-    deadlineLabel: '2025년 9월 초 (완료)',
-    deadlineDate: '2025-09-05',
-    journal: null,
-    url: 'https://chi2026.acm.org/',
-  },
-  {
-    id: 'ieeeVR',
-    abbr: 'IEEE VR',
-    name: 'IEEE VR',
-    fullName: 'IEEE Conference on Virtual Reality and 3D User Interfaces',
-    scope: '가상현실 및 3D 사용자 인터페이스 연구',
-    category: 'international',
-    bk21: '최우수',
-    if: 2,
-    dateMonth: 3,
-    dateLabel: '2026년 3월 21-25일 · 대구, 한국 ✓개최완료',
-    deadlineLabel: '2025년 9월 중순 (완료)',
-    deadlineDate: '2025-09-15',
-    journal: 'TVCG',
-    url: 'https://ieeevr.org/2026/',
-  },
-  {
-    id: 'iui',
-    abbr: 'IUI',
-    name: 'ACM IUI',
-    fullName: 'ACM Conference on Intelligent User Interfaces',
-    scope: '인공지능과 사용자 인터페이스의 결합',
-    category: 'international',
-    bk21: '우수',
-    if: 2,
-    dateMonth: 3,
-    dateLabel: '2026년 3월 23-26일 · 파포스, 키프로스 ✓개최완료',
-    deadlineLabel: '2025년 10월 초 (완료)',
-    deadlineDate: '2025-10-05',
-    journal: null,
-    url: 'https://iui.hosting.acm.org/2026/',
-  },
-  {
-    id: 'siggraph',
-    abbr: 'SIGGRAPH',
-    name: 'ACM SIGGRAPH',
-    fullName: 'ACM Special Interest Group on Computer GRAPHics and Interactive Techniques',
-    scope: '그래픽스 및 인터랙티브 기술 최고 권위',
-    category: 'international',
-    bk21: '최우수',
-    if: 4,
-    dateMonth: 7,
-    dateLabel: '2026년 7월 19-23일 · 로스앤젤레스, 미국',
-    deadlineLabel: '2026년 1월 22일 (완료) · 초록 1/15',
-    deadlineDate: '2026-01-22',
-    journal: null,
-    url: 'https://s2026.siggraph.org/',
-  },
-  {
-    id: 'eics',
-    abbr: 'EICS',
-    name: 'ACM EICS',
-    fullName: 'ACM SIGCHI Symposium on Engineering Interactive Computing Systems',
-    scope: '인터랙티브 시스템 공학 및 설계 방법론',
-    category: 'international',
-    bk21: null,
-    if: null,
-    dateMonth: 7,
-    dateLabel: '2026년 6월 30일-7월 3일 · 파트라스, 그리스',
-    deadlineLabel: '2026년 2월 중순 (완료)',
-    deadlineDate: '2026-02-15',
-    journal: 'PACMHCI',
-    url: 'https://eics.acm.org/2026/',
-  },
-  {
-    id: 'cui',
-    abbr: 'CUI',
-    name: 'ACM CUI',
-    fullName: 'ACM Conference on Conversational User Interfaces',
-    scope: '대화형 에이전트 및 음성 인터페이스 연구',
-    category: 'international',
-    bk21: null,
-    if: null,
-    dateMonth: 7,
-    dateLabel: '2026년 7월 21-24일 · 브레멘, 독일',
-    deadlineLabel: '2026년 2월 하순 (완료)',
-    deadlineDate: '2026-02-28',
-    journal: 'PACMHCI',
-    url: 'https://cui.acm.org/2026/',
-  },
-  {
-    id: 'vis',
-    abbr: 'IEEE VIS',
-    name: 'IEEE VIS',
-    fullName: 'IEEE Visualization and Visual Analytics',
-    scope: '데이터 시각화 및 시각적 분석 기법',
-    category: 'international',
-    bk21: '최우수',
-    if: 4,
-    dateMonth: 10,
-    dateLabel: '2026년 10월 (장소 미정)',
-    deadlineLabel: '2026년 3월 31일 · 초록 3월 21일',
-    deadlineDate: '2026-03-31',
-    journal: 'TVCG',
-    url: 'https://ieeevis.org/year/2026/welcome',
-  },
-  {
-    id: 'uist',
-    abbr: 'UIST',
-    name: 'ACM UIST',
-    fullName: 'ACM Symposium on User Interface Software and Technology',
-    scope: '혁신적 UI 소프트웨어 및 하드웨어 기술',
-    category: 'international',
-    bk21: '최우수',
-    if: 2,
-    dateMonth: 11,
-    dateLabel: '2026년 11월 2-5일 · 디트로이트, 미국',
-    deadlineLabel: '2026년 3월 31일 (AoE)',
-    deadlineDate: '2026-03-31',
-    journal: null,
-    url: 'https://uist.acm.org/2026/',
-  },
-  {
-    id: 'ismar',
-    abbr: 'IEEE ISMAR',
-    name: 'IEEE ISMAR',
-    fullName: 'IEEE International Symposium on Mixed and Augmented Reality',
-    scope: '증강현실(AR) 및 혼합현실(MR) 원천 기술',
-    category: 'international',
-    bk21: '최우수',
-    if: 1,
-    dateMonth: 10,
-    dateLabel: '2026년 10월 5-9일 · 바리, 이탈리아',
-    deadlineLabel: '2026년 3월~4월 (공지 예정)',
-    deadlineDate: '2026-04-01',
-    journal: 'TVCG',
-    url: 'https://www.ieeeismar.net/2026/',
-  },
-  {
-    id: 'mm',
-    abbr: 'ACM MM',
-    name: 'ACM Multimedia',
-    fullName: 'ACM International Conference on Multimedia',
-    scope: '멀티미디어 데이터 분석 및 시스템 전반',
-    category: 'international',
-    bk21: '우수',
-    if: 4,
-    dateMonth: 11,
-    dateLabel: '2026년 11월 10-14일 · 리우데자네이루, 브라질',
-    deadlineLabel: '2026년 4월 초 · 초록 3월 25일',
-    deadlineDate: '2026-04-05',
-    journal: null,
-    url: 'https://2026.acmmm.org/',
-  },
-  {
-    id: 'ubicomp',
-    abbr: 'UbiComp',
-    name: 'ACM UbiComp / ISWC',
-    fullName: 'ACM International Joint Conference on Pervasive and Ubiquitous Computing',
-    scope: '유비쿼터스 컴퓨팅 및 상황 인식 연구',
-    category: 'international',
-    bk21: '최우수',
-    if: 3,
-    dateMonth: 11,
-    dateLabel: '2026년 11월 2-5일 · 요크, 영국',
-    deadlineLabel: 'IMWUT 롤링 (2/5/8/11월)',
-    deadlineDate: '2026-05-01',
-    journal: 'IMWUT',
-    url: 'https://www.ubicomp.org/ubicomp-iswc-2026/',
-  },
-  {
-    id: 'icmi',
-    abbr: 'ICMI',
-    name: 'ACM ICMI',
-    fullName: 'ACM International Conference on Multimodal Interaction',
-    scope: '다중 감각(Multimodal) 인터랙션 기술',
-    category: 'international',
-    bk21: null,
-    if: null,
-    dateMonth: 10,
-    dateLabel: '2026년 10월 5-9일 · 나폴리, 이탈리아',
-    deadlineLabel: '2026년 5월 중순',
-    deadlineDate: '2026-05-15',
-    journal: null,
-    url: 'https://icmi.acm.org/2026/',
-  },
-  {
-    id: 'siggraph_asia',
-    abbr: 'SIGGRAPH Asia',
-    name: 'ACM SIGGRAPH Asia',
-    fullName: 'ACM SIGGRAPH Asia',
-    scope: '아시아권 최대 그래픽스 및 인터랙티브',
-    category: 'international',
-    bk21: '최우수',
-    if: null,
-    dateMonth: 12,
-    dateLabel: '2026년 12월 1-4일 · 쿠알라룸푸르, 말레이시아',
-    deadlineLabel: '2026년 5월 말 (예정)',
-    deadlineDate: '2026-05-31',
-    journal: null,
-    url: 'https://asia.siggraph.org/2026/',
-  },
-  {
-    id: 'vrst',
-    abbr: 'VRST',
-    name: 'ACM VRST',
-    fullName: 'ACM Symposium on Virtual Reality Software and Technology',
-    scope: '가상현실 시스템 소프트웨어 및 기술',
-    category: 'international',
-    bk21: '우수',
-    if: 1,
-    dateMonth: 11,
-    dateLabel: '2026년 11월 (장소 미정)',
-    deadlineLabel: '2026년 7월 중순',
-    deadlineDate: '2026-07-15',
-    journal: null,
-    url: 'https://vrst.acm.org/',
-  },
-  {
-    id: 'iss',
-    abbr: 'ISS',
-    name: 'ACM ISS',
-    fullName: 'ACM International Conference on Interactive Surfaces and Spaces',
-    scope: '인터랙티브 표면 및 대형 디스플레이 연구',
-    category: 'international',
-    bk21: null,
-    if: null,
-    dateMonth: 11,
-    dateLabel: '2026년 11월 (장소 미정)',
-    deadlineLabel: 'PACMHCI 롤링 (3월/7월)',
-    deadlineDate: '2026-07-01',
-    journal: 'PACMHCI',
-    url: 'https://iss.acm.org/',
-  },
-  {
-    id: 'cscw',
-    abbr: 'CSCW',
-    name: 'ACM CSCW',
-    fullName: 'ACM Conference on Computer-Supported Cooperative Work and Social Computing',
-    scope: '협업 지원 시스템 및 사회적 컴퓨팅 연구',
-    category: 'international',
-    bk21: '우수',
-    if: 3,
-    dateMonth: 10,
-    dateLabel: '2026년 10월 10-14일 · 솔트레이크시티, 미국',
-    deadlineLabel: '2025년 5월 (완료) → 2026년 롤링 전환 중',
-    deadlineDate: '2025-05-13',
-    journal: 'PACMHCI',
-    url: 'https://cscw.acm.org/2026/',
-  },
-  {
-    id: 'percom',
-    abbr: 'PerCom',
-    name: 'IEEE PerCom',
-    fullName: 'IEEE International Conference on Pervasive Computing and Communications',
-    scope: '퍼베이시브 컴퓨팅 인프라 및 서비스',
-    category: 'international',
-    bk21: '우수',
-    if: 3,
-    dateMonth: 3,
-    dateLabel: '2027년 3월 (장소 미정)',
-    deadlineLabel: '2026년 9월 말 (예정)',
-    deadlineDate: '2026-09-30',
-    journal: null,
-    url: 'https://www.percom.org/',
-  },
-  {
-    id: 'mobilehci',
-    abbr: 'MobileHCI',
-    name: 'ACM MobileHCI',
-    fullName: 'ACM International Conference on Mobile Human-Computer Interaction',
-    scope: '모바일 인터페이스 및 사용자 경험 연구',
-    category: 'international',
-    bk21: null,
-    if: null,
-    dateMonth: 9,
-    dateLabel: '2026년 일정 미공개 (MobileHCI 2025: 스완지, 영국)',
-    deadlineLabel: '2026년 일정 미공개 (공식사이트 확인 요망)',
-    deadlineDate: '2026-06-01',
-    journal: null,
-    url: 'https://mobilehci.acm.org/',
-  },
-  {
-    id: 'whc',
-    abbr: 'WHC',
-    name: 'World Haptics',
-    fullName: 'IEEE World Haptics Conference',
-    scope: '촉각 상호작용 및 햅틱 시스템 연구',
-    category: 'international',
-    bk21: '우수',
-    if: null,
-    dateMonth: 7,
-    dateLabel: '2027년 7월 (격년 개최)',
-    deadlineLabel: '2027년 1월 말 (예정)',
-    deadlineDate: '2027-01-31',
-    journal: null,
-    url: 'https://worldhaptics.org/',
-  },
-  {
-    id: 'chiplay',
-    abbr: 'CHI PLAY',
-    name: 'ACM CHI PLAY',
-    fullName: 'ACM Annual Symposium on Computer-Human Interaction in Play',
-    scope: '게임 및 엔터테인먼트 중심 HCI 연구',
-    category: 'international',
-    bk21: null,
-    if: null,
-    dateMonth: 11,
-    dateLabel: '2026년 11월 2-5일 · 요크, 영국',
-    deadlineLabel: '2026년 2월 하순 (완료)',
-    deadlineDate: '2026-02-28',
-    journal: 'PACMHCI',
-    url: 'https://chiplay.acm.org/',
-  },
-  {
-    id: 'eurovis',
-    abbr: 'EuroVis',
-    name: 'EuroVis',
-    fullName: 'Eurographics Conference on Visualization',
-    scope: '유럽 기반 시각화 기법 및 연구',
-    category: 'international',
-    bk21: '우수',
-    if: null,
-    dateMonth: 6,
-    dateLabel: '2026년 6월 (장소 미정)',
-    deadlineLabel: '2025년 11월 말 (완료)',
-    deadlineDate: '2025-11-30',
-    journal: 'CGF',
-    url: 'https://eurovis.org/',
-  },
-  // ─── 국내 ───
-  {
-    id: 'esk_spring',
-    abbr: 'ESK (춘)',
-    name: '대한인간공학회 춘계',
-    fullName: '대한인간공학회 춘계학술대회',
-    scope: '인간공학, 사용성, 제품 설계 국내 권위',
-    category: 'domestic',
-    bk21: null,
-    if: null,
-    dateMonth: 5,
-    dateLabel: '2026년 5월',
-    deadlineLabel: '2026년 3월 중순',
-    deadlineDate: '2026-03-15',
-    journal: null,
-    url: 'https://www.esk.or.kr/',
-  },
-  {
-    id: 'kcc',
-    abbr: 'KCC',
-    name: '한국정보과학회 KCC',
-    fullName: '한국정보과학회 한국컴퓨터종합학술대회',
-    scope: '컴퓨터과학 전 분야 (HCI/그래픽스 포함)',
-    category: 'domestic',
-    bk21: '주관',
-    if: null,
-    dateMonth: 6,
-    dateLabel: '2026년 6월',
-    deadlineLabel: '2026년 4월 초',
-    deadlineDate: '2026-04-05',
-    journal: null,
-    url: 'https://www.kiise.or.kr/',
-  },
-  {
-    id: 'esk_fall',
-    abbr: 'ESK (추)',
-    name: '대한인간공학회 추계',
-    fullName: '대한인간공학회 추계학술대회',
-    scope: '인간공학 및 사용자 경험 최신 연구 공유',
-    category: 'domestic',
-    bk21: null,
-    if: null,
-    dateMonth: 10,
-    dateLabel: '2026년 10월',
-    deadlineLabel: '2026년 8월 중순',
-    deadlineDate: '2026-08-15',
-    journal: null,
-    url: 'https://www.esk.or.kr/',
-  },
-  {
-    id: 'haptics_kr',
-    abbr: 'Haptics KR',
-    name: '한국햅틱스학회',
-    fullName: '한국햅틱스학회 학술대회',
-    scope: '국내 촉각 및 햅틱 기술 연구 교류',
-    category: 'domestic',
-    bk21: null,
-    if: null,
-    dateMonth: 11,
-    dateLabel: '2026년 11월',
-    deadlineLabel: '2026년 9월 하순',
-    deadlineDate: '2026-09-25',
-    journal: null,
-    url: 'https://www.haptics.or.kr/',
-  },
-  {
-    id: 'hcikorea',
-    abbr: 'HCI Korea',
-    name: '한국HCI학회',
-    fullName: '한국HCI학회 학술대회',
-    scope: '국내 최대 HCI 학회, 학제적 연구 교류',
-    category: 'domestic',
-    bk21: null,
-    if: null,
-    dateMonth: 2,
-    dateLabel: '2027년 2월',
-    deadlineLabel: '2026년 10월 초',
-    deadlineDate: '2026-10-05',
-    journal: null,
-    url: 'https://hcikorea.org/',
-  },
-  {
-    id: 'ksc',
-    abbr: 'KSC',
-    name: '한국정보과학회 KSC',
-    fullName: '한국정보과학회 동계학술발표논문집',
-    scope: '소프트웨어 및 컴퓨터공학 최신 연구',
-    category: 'domestic',
-    bk21: '주관',
-    if: null,
-    dateMonth: 12,
-    dateLabel: '2026년 12월',
-    deadlineLabel: '2026년 10월 중순',
-    deadlineDate: '2026-10-15',
-    journal: null,
-    url: 'https://www.kiise.or.kr/',
-  },
+  {id:'chi',        abbr:'CHI',           name:'ACM CHI',            fullName:'ACM Conference on Human Factors in Computing Systems',           scope:'HCI 분야 메인 학회, 인터랙션 전 분야',                  category:'international', bk21:'최우수', if:4,    dateMonth:4,  dateLabel:'2026년 4월 13-17일 · 바르셀로나',    deadlineLabel:'2025년 9월 초 (완료)',              deadlineDate:'2025-09-05', journal:null,      url:'https://chi2026.acm.org/'},
+  {id:'ieeeVR',     abbr:'IEEE VR',        name:'IEEE VR',            fullName:'IEEE Conference on Virtual Reality and 3D User Interfaces',      scope:'가상현실 및 3D 사용자 인터페이스 연구',                  category:'international', bk21:'최우수', if:2,    dateMonth:3,  dateLabel:'2026년 3월 21-25일 · 대구 ✓완료',    deadlineLabel:'2025년 9월 중순 (완료)',            deadlineDate:'2025-09-15', journal:'TVCG',    url:'https://ieeevr.org/2026/'},
+  {id:'iui',        abbr:'IUI',            name:'ACM IUI',            fullName:'ACM Conference on Intelligent User Interfaces',                  scope:'인공지능과 사용자 인터페이스의 결합',                    category:'international', bk21:'우수',   if:2,    dateMonth:3,  dateLabel:'2026년 3월 23-26일 · 파포스 ✓완료',  deadlineLabel:'2025년 10월 초 (완료)',             deadlineDate:'2025-10-05', journal:null,      url:'https://iui.hosting.acm.org/2026/'},
+  {id:'siggraph',   abbr:'SIGGRAPH',       name:'ACM SIGGRAPH',       fullName:'ACM Special Interest Group on Computer GRAPHics and IT',        scope:'그래픽스 및 인터랙티브 기술 최고 권위',                  category:'international', bk21:'최우수', if:4,    dateMonth:7,  dateLabel:'2026년 7월 19-23일 · 로스앤젤레스',  deadlineLabel:'2026년 1월 22일 (완료)',            deadlineDate:'2026-01-22', journal:null,      url:'https://s2026.siggraph.org/'},
+  {id:'eics',       abbr:'EICS',           name:'ACM EICS',           fullName:'ACM SIGCHI Symposium on Engineering Interactive Computing Sys.', scope:'인터랙티브 시스템 공학 및 설계 방법론',                  category:'international', bk21:null,     if:null, dateMonth:7,  dateLabel:'2026년 6/30-7/3 · 파트라스, 그리스', deadlineLabel:'2026년 2월 중순 (완료)',            deadlineDate:'2026-02-15', journal:'PACMHCI', url:'https://eics.acm.org/2026/'},
+  {id:'cui',        abbr:'CUI',            name:'ACM CUI',            fullName:'ACM Conference on Conversational User Interfaces',              scope:'대화형 에이전트 및 음성 인터페이스 연구',                category:'international', bk21:null,     if:null, dateMonth:7,  dateLabel:'2026년 7월 21-24일 · 브레멘, 독일',  deadlineLabel:'2026년 2월 하순 (완료)',            deadlineDate:'2026-02-28', journal:'PACMHCI', url:'https://cui.acm.org/2026/'},
+  {id:'vis',        abbr:'IEEE VIS',       name:'IEEE VIS',           fullName:'IEEE Visualization and Visual Analytics',                       scope:'데이터 시각화 및 시각적 분석 기법',                      category:'international', bk21:'최우수', if:4,    dateMonth:10, dateLabel:'2026년 10월 (장소 미정)',             deadlineLabel:'2026년 3월 31일 · 초록 3월 21일', deadlineDate:'2026-03-31', journal:'TVCG',    url:'https://ieeevis.org/year/2026/welcome'},
+  {id:'uist',       abbr:'UIST',           name:'ACM UIST',           fullName:'ACM Symposium on User Interface Software and Technology',       scope:'혁신적 UI 소프트웨어 및 하드웨어 기술',                  category:'international', bk21:'최우수', if:2,    dateMonth:11, dateLabel:'2026년 11월 2-5일 · 디트로이트',    deadlineLabel:'2026년 3월 31일 (잠정)',            deadlineDate:'2026-03-31', journal:null,      url:'https://uist.acm.org/2026/'},
+  {id:'ismar',      abbr:'IEEE ISMAR',     name:'IEEE ISMAR',         fullName:'IEEE International Symposium on Mixed and Augmented Reality',   scope:'증강현실(AR) 및 혼합현실(MR) 원천 기술',                 category:'international', bk21:'최우수', if:1,    dateMonth:10, dateLabel:'2026년 10월 5-9일 · 바리, 이탈리아', deadlineLabel:'2026년 3-4월 (공지 예정)',          deadlineDate:'2026-04-01', journal:'TVCG',    url:'https://www.ieeeismar.net/2026/'},
+  {id:'mm',         abbr:'ACM MM',         name:'ACM Multimedia',     fullName:'ACM International Conference on Multimedia',                    scope:'멀티미디어 데이터 분석 및 시스템 전반',                  category:'international', bk21:'우수',   if:4,    dateMonth:11, dateLabel:'2026년 11월 10-14일 · 리우데자네이루', deadlineLabel:'2026년 4월 초 · 초록 3월 25일',  deadlineDate:'2026-04-05', journal:null,      url:'https://2026.acmmm.org/'},
+  {id:'ubicomp',    abbr:'UbiComp',        name:'ACM UbiComp/ISWC',   fullName:'ACM International Joint Conference on Pervasive and Ubiquitous Computing', scope:'유비쿼터스 컴퓨팅 및 상황 인식 연구',            category:'international', bk21:'최우수', if:3,    dateMonth:11, dateLabel:'2026년 11월 2-5일 · 요크, 영국',    deadlineLabel:'IMWUT 롤링 (2/5/8/11월)',          deadlineDate:'2026-05-01', journal:'IMWUT',   url:'https://www.ubicomp.org/ubicomp-iswc-2026/'},
+  {id:'icmi',       abbr:'ICMI',           name:'ACM ICMI',           fullName:'ACM International Conference on Multimodal Interaction',        scope:'다중 감각(Multimodal) 인터랙션 기술',                    category:'international', bk21:null,     if:null, dateMonth:10, dateLabel:'2026년 10월 5-9일 · 나폴리, 이탈리아', deadlineLabel:'2026년 5월 중순',               deadlineDate:'2026-05-15', journal:null,      url:'https://icmi.acm.org/2026/'},
+  {id:'siggraph_asia', abbr:'SIGGRAPH Asia', name:'ACM SIGGRAPH Asia', fullName:'ACM SIGGRAPH Asia',                                           scope:'아시아권 최대 그래픽스 및 인터랙티브',                   category:'international', bk21:'최우수', if:null, dateMonth:12, dateLabel:'2026년 12월 1-4일 · 쿠알라룸푸르', deadlineLabel:'2026년 5월 말 (예정)',             deadlineDate:'2026-05-31', journal:null,      url:'https://asia.siggraph.org/2026/'},
+  {id:'cscw',       abbr:'CSCW',           name:'ACM CSCW',           fullName:'ACM Conference on Computer-Supported Cooperative Work',         scope:'협업 지원 시스템 및 사회적 컴퓨팅 연구',                 category:'international', bk21:'우수',   if:3,    dateMonth:10, dateLabel:'2026년 10월 10-14일 · 솔트레이크시티', deadlineLabel:'2025년 5월 완료 → 롤링 전환 중', deadlineDate:'2025-05-13', journal:'PACMHCI', url:'https://cscw.acm.org/2026/'},
+  {id:'vrst',       abbr:'VRST',           name:'ACM VRST',           fullName:'ACM Symposium on Virtual Reality Software and Technology',      scope:'가상현실 시스템 소프트웨어 및 기술',                     category:'international', bk21:'우수',   if:1,    dateMonth:11, dateLabel:'2026년 11월 (장소 미정)',             deadlineLabel:'2026년 7월 중순',                  deadlineDate:'2026-07-15', journal:null,      url:'https://vrst.acm.org/'},
+  {id:'iss',        abbr:'ISS',            name:'ACM ISS',            fullName:'ACM International Conference on Interactive Surfaces and Spaces', scope:'인터랙티브 표면 및 대형 디스플레이 연구',              category:'international', bk21:null,     if:null, dateMonth:11, dateLabel:'2026년 11월 (장소 미정)',             deadlineLabel:'PACMHCI 롤링 (3월/7월)',           deadlineDate:'2026-07-01', journal:'PACMHCI', url:'https://iss.acm.org/'},
+  {id:'soups',      abbr:'SOUPS',          name:'USENIX SOUPS',       fullName:'USENIX Symposium On Usable Privacy and Security',               scope:'보안·프라이버시 분야 사용성 — 인증, 개인정보, 접근성',  category:'international', bk21:null,     if:null, dateMonth:8,  dateLabel:'2026년 8월 23일 · 하노버, 독일',     deadlineLabel:'2026년 2월 12일 (완료)',            deadlineDate:'2026-02-12', journal:null,      url:'https://www.usenix.org/conference/soups2026'},
+  {id:'percom',     abbr:'PerCom',         name:'IEEE PerCom',        fullName:'IEEE International Conference on Pervasive Computing and Communications', scope:'퍼베이시브 컴퓨팅 인프라 및 서비스',         category:'international', bk21:'우수',   if:3,    dateMonth:3,  dateLabel:'2027년 3월 (장소 미정)',              deadlineLabel:'2026년 9월 말 (예정)',              deadlineDate:'2026-09-30', journal:null,      url:'https://www.percom.org/'},
+  {id:'mobilehci',  abbr:'MobileHCI',      name:'ACM MobileHCI',      fullName:'ACM International Conference on Mobile Human-Computer Interaction', scope:'모바일 인터페이스 및 사용자 경험 연구',            category:'international', bk21:null,     if:null, dateMonth:9,  dateLabel:'2026년 일정 미공개',                  deadlineLabel:'2026년 일정 미공개',                deadlineDate:null,         journal:null,      url:'https://mobilehci.acm.org/'},
+  {id:'whc',        abbr:'WHC',            name:'World Haptics',      fullName:'IEEE World Haptics Conference',                                  scope:'촉각 상호작용 및 햅틱 시스템 연구',                     category:'international', bk21:'우수',   if:null, dateMonth:7,  dateLabel:'2027년 7월 (격년 개최)',              deadlineLabel:'2027년 1월 말 (예정)',              deadlineDate:'2027-01-31', journal:null,      url:'https://worldhaptics.org/'},
+  {id:'chiplay',    abbr:'CHI PLAY',       name:'ACM CHI PLAY',       fullName:'ACM Annual Symposium on Computer-Human Interaction in Play',    scope:'게임 및 엔터테인먼트 중심 HCI 연구',                    category:'international', bk21:null,     if:null, dateMonth:11, dateLabel:'2026년 11월 2-5일 · 요크, 영국',    deadlineLabel:'2026년 2월 하순 (완료)',            deadlineDate:'2026-02-28', journal:'PACMHCI', url:'https://chiplay.acm.org/'},
+  {id:'eurovis',    abbr:'EuroVis',        name:'EuroVis',            fullName:'Eurographics Conference on Visualization',                       scope:'유럽 기반 시각화 기법 및 연구',                          category:'international', bk21:'우수',   if:null, dateMonth:6,  dateLabel:'2026년 6월 (장소 미정)',              deadlineLabel:'2025년 11월 말 (완료)',             deadlineDate:'2025-11-30', journal:'CGF',     url:'https://eurovis.org/'},
+  // 국내
+  {id:'esk_spring', abbr:'ESK (춘)',       name:'대한인간공학회 춘계', fullName:'대한인간공학회 춘계학술대회',                                    scope:'인간공학, 사용성, 제품 설계 국내 권위',                  category:'domestic',      bk21:null,     if:null, dateMonth:5,  dateLabel:'2026년 5월',                          deadlineLabel:'2026년 3월 중순',                  deadlineDate:'2026-03-15', journal:null,      url:'https://www.esk.or.kr/'},
+  {id:'kcc',        abbr:'KCC',            name:'한국정보과학회 KCC', fullName:'한국정보과학회 한국컴퓨터종합학술대회',                          scope:'컴퓨터과학 전 분야 (HCI/그래픽스 포함)',                 category:'domestic',      bk21:'주관',   if:null, dateMonth:6,  dateLabel:'2026년 6월',                          deadlineLabel:'2026년 4월 초',                    deadlineDate:'2026-04-05', journal:null,      url:'https://www.kiise.or.kr/'},
+  {id:'esk_fall',   abbr:'ESK (추)',       name:'대한인간공학회 추계', fullName:'대한인간공학회 추계학술대회',                                    scope:'인간공학 및 사용자 경험 최신 연구 공유',                 category:'domestic',      bk21:null,     if:null, dateMonth:10, dateLabel:'2026년 10월',                         deadlineLabel:'2026년 8월 중순',                  deadlineDate:'2026-08-15', journal:null,      url:'https://www.esk.or.kr/'},
+  {id:'haptics_kr', abbr:'Haptics KR',     name:'한국햅틱스학회',     fullName:'한국햅틱스학회 학술대회',                                        scope:'국내 촉각 및 햅틱 기술 연구 교류',                       category:'domestic',      bk21:null,     if:null, dateMonth:11, dateLabel:'2026년 11월',                         deadlineLabel:'2026년 9월 하순',                  deadlineDate:'2026-09-25', journal:null,      url:'https://www.haptics.or.kr/'},
+  {id:'hcikorea',   abbr:'HCI Korea',      name:'한국HCI학회',        fullName:'한국HCI학회 학술대회',                                           scope:'국내 최대 HCI 학회, 학제적 연구 교류',                   category:'domestic',      bk21:null,     if:null, dateMonth:2,  dateLabel:'2027년 2월',                          deadlineLabel:'2026년 10월 초',                   deadlineDate:'2026-10-05', journal:null,      url:'https://hcikorea.org/'},
+  {id:'ksc',        abbr:'KSC',            name:'한국정보과학회 KSC', fullName:'한국정보과학회 동계학술발표논문집',                              scope:'소프트웨어 및 컴퓨터공학 최신 연구',                     category:'domestic',      bk21:'주관',   if:null, dateMonth:12, dateLabel:'2026년 12월',                         deadlineLabel:'2026년 10월 중순',                 deadlineDate:'2026-10-15', journal:null,      url:'https://www.kiise.or.kr/'},
 ];
 
-// ─── State ───
+// ── State ────────────────────────────────────────────────────
 let activeFilter = 'all';
-let activeRank = null;
+let activeRank   = null;
 let activeJournal = null;
-let currentSort = 'deadline';
-let currentView = 'card';
+let currentSort  = 'deadline';
+let currentView  = 'card';
+const TODAY = new Date('2026-03-15');
 
-// ─── Render ───
-function getDeadlineStatus(dateStr) {
-  if (!dateStr) return { passed: false, daysLeft: null };
-  const d = new Date(dateStr);
-  const diff = Math.ceil((d - TODAY) / (1000 * 60 * 60 * 24));
-  return { passed: diff < 0, daysLeft: diff };
+// ── Helpers ──────────────────────────────────────────────────
+function deadlineStatus(ds) {
+  if (!ds) return {passed:false, daysLeft:null};
+  const d = new Date(ds);
+  const diff = Math.ceil((d - TODAY) / 86400000);
+  return {passed: diff < 0, daysLeft: diff};
 }
 
-function deadlineCountdown(dateStr) {
-  const { passed, daysLeft } = getDeadlineStatus(dateStr);
-  if (passed) return `<div class="countdown passed">마감 완료</div>`;
-  if (daysLeft <= 7) return `<div class="countdown urgent">⚡ D-${daysLeft}</div>`;
-  if (daysLeft <= 30) return `<div class="countdown soon">D-${daysLeft}</div>`;
-  if (daysLeft <= 60) return `<div class="countdown">D-${daysLeft}</div>`;
-  return `<div class="countdown" style="color:var(--text3)">D-${daysLeft}</div>`;
+function badgeClass(bk21) {
+  if (bk21 === '최우수') return 'b-top';
+  if (bk21 === '우수')   return 'b-good';
+  if (bk21 === '주관')   return 'b-good';
+  return '';
 }
 
-function renderBadges(conf) {
-  let html = '';
-  if (conf.category === 'domestic') html += `<span class="badge badge-domestic">국내</span>`;
-  else html += `<span class="badge badge-intl">국외</span>`;
-  if (conf.bk21 === '최우수') html += `<span class="badge badge-top">최우수</span>`;
-  else if (conf.bk21 === '우수') html += `<span class="badge badge-good">우수</span>`;
-  else if (conf.bk21 === '주관') html += `<span class="badge badge-good">주관</span>`;
-  if (conf.if) html += `<span class="badge badge-if">IF ${conf.if}</span>`;
-  if (conf.journal) html += `<span class="badge badge-journal">${conf.journal}</span>`;
-  return html;
+function orgBannerClass(org) {
+  const m = {ACM:'acm', IEEE:'ieee', USENIX:'usenix', EG:'eg'};
+  return m[org] || 'kr';
 }
 
+function orgBadgeClass(org) {
+  const m = {ACM:'ob-acm', IEEE:'ob-ieee', USENIX:'ob-usenix', EG:'ob-eg'};
+  return m[org] || 'ob-kr';
+}
+
+// ── Render Cards ─────────────────────────────────────────────
 function renderCards(list) {
   const container = document.getElementById('cardView');
   if (!list.length) {
-    container.innerHTML = `<div style="color:var(--text3); font-size:0.85rem; padding:2rem; grid-column:1/-1; text-align:center;">검색 결과가 없습니다.</div>`;
+    container.innerHTML = '<div class="empty-state">검색 결과가 없습니다.</div>';
     return;
   }
-  container.innerHTML = list.map(conf => {
-    const { passed } = getDeadlineStatus(conf.deadlineDate);
-    return `
-    <div class="conf-card ${conf.category}" id="card-${conf.id}">
-      <div class="conf-card-header">
-        <div class="conf-abbr">
-          <a href="${conf.url}" target="_blank" rel="noopener">${conf.abbr} ↗</a>
-        </div>
-        <div class="conf-badges">${renderBadges(conf)}</div>
-      </div>
-      <div class="conf-name">${conf.name}</div>
-      <div class="conf-scope">${conf.scope}</div>
-      <div class="conf-meta">
-        <div class="meta-item">
-          <span class="meta-label">개최 시기</span>
-          <span class="meta-value date">${conf.dateLabel}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">논문 마감</span>
-          <span class="meta-value deadline ${passed ? 'passed' : ''}">${conf.deadlineLabel}</span>
-          ${deadlineCountdown(conf.deadlineDate)}
-        </div>
-      </div>
-      <a href="${conf.url}" target="_blank" class="conf-link-btn" rel="noopener">공식 웹사이트 →</a>
-    </div>`;
-  }).join('');
+  const html = [];
+  list.forEach(function(conf, i) {
+    const st = deadlineStatus(conf.deadlineDate);
+    const v  = venueData[conf.id] || {city:'', country:'', flag:'🌐', org:''};
+    const bc = orgBannerClass(v.org);
+    const oc = orgBadgeClass(v.org);
+    const hasVenue = v.city && v.city !== 'TBD';
+    const domain = conf.url.replace('https://','').replace('http://','').split('/')[0];
+
+    // countdown
+    let cdHtml = '';
+    if (conf.deadlineDate) {
+      if (st.passed) {
+        cdHtml = '<div class="countdown cd-passed">마감 완료</div>';
+      } else if (st.daysLeft <= 7) {
+        cdHtml = '<div class="countdown cd-urgent">⚡ D-' + st.daysLeft + '</div>';
+      } else if (st.daysLeft <= 30) {
+        cdHtml = '<div class="countdown cd-soon">D-' + st.daysLeft + '</div>';
+      } else {
+        cdHtml = '<div class="countdown" style="color:var(--text3)">D-' + st.daysLeft + '</div>';
+      }
+    }
+
+    // badges
+    let bHtml = conf.category === 'domestic'
+      ? '<span class="badge b-dom">국내</span>'
+      : '<span class="badge b-intl">국외</span>';
+    if (conf.bk21) bHtml += ' <span class="badge ' + badgeClass(conf.bk21) + '">' + conf.bk21 + '</span>';
+    if (conf.if)   bHtml += ' <span class="badge b-if">IF ' + conf.if + '</span>';
+    if (conf.journal) bHtml += ' <span class="badge b-journal">' + conf.journal + '</span>';
+
+    const shortDate = conf.dateLabel.split('·')[0].trim();
+
+    html.push(
+      '<div class="conf-card" style="animation-delay:' + (i*0.025) + 's">' +
+        '<div class="vbanner ' + bc + '">' +
+          '<div class="vleft">' +
+            (v.cc ? '<img class="vflag-img" src="https://flagcdn.com/w40/' + v.cc + '.png" alt="' + v.country + '" onerror="this.hidden=1">' : '<span class="vflag-img" style="font-size:1.4rem;line-height:1">🌐</span>') +
+            '<div>' +
+              '<div class="vcity">' + (hasVenue ? v.city : '장소 미정') + '</div>' +
+              (v.country ? '<div class="vcountry">' + v.country + '</div>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="vright">' +
+            '<span class="org-badge ' + oc + '">' + (v.org || conf.abbr.split(' ')[0]) + '</span>' +
+            '<img class="vfavicon" src="https://www.google.com/s2/favicons?domain=' + domain + '&sz=32" onerror="this.hidden=1" alt="" loading="lazy">' +
+          '</div>' +
+        '</div>' +
+        '<div class="cbody">' +
+          '<div class="card-header">' +
+            '<div class="abbr-text"><a href="' + conf.url + '" target="_blank" rel="noopener">' + conf.abbr + '</a></div>' +
+            '<div class="card-badges">' + bHtml + '</div>' +
+          '</div>' +
+          '<div class="conf-name">' + conf.name + '</div>' +
+          '<div class="conf-scope">' + conf.scope + '</div>' +
+          '<div class="conf-meta">' +
+            '<div class="meta-item">' +
+              '<span class="meta-label">📅 개최</span>' +
+              '<span class="meta-val date">' + shortDate + '</span>' +
+            '</div>' +
+            '<div class="meta-item">' +
+              '<span class="meta-label">📝 마감</span>' +
+              '<span class="meta-val deadline' + (st.passed ? ' passed' : '') + '">' + conf.deadlineLabel + '</span>' +
+              cdHtml +
+            '</div>' +
+          '</div>' +
+          '<a href="' + conf.url + '" target="_blank" rel="noopener" class="link-btn">공식 웹사이트 →</a>' +
+        '</div>' +
+      '</div>'
+    );
+  });
+  container.innerHTML = html.join('');
 }
 
+// ── Render Table ─────────────────────────────────────────────
 function renderTable(list) {
   const tbody = document.getElementById('tableBody');
   if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:2rem;">검색 결과가 없습니다.</td></tr>`;
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text3);padding:2rem">결과 없음</td></tr>';
     return;
   }
-  tbody.innerHTML = list.map(conf => {
-    const { passed } = getDeadlineStatus(conf.deadlineDate);
-    return `
-    <tr class="${conf.category}-row" id="row-${conf.id}">
-      <td class="tbl-abbr"><a href="${conf.url}" target="_blank" rel="noopener">${conf.abbr} ↗</a></td>
-      <td><div style="font-size:0.8rem;">${conf.name}</div><div class="tbl-name">${conf.fullName}</div></td>
-      <td class="tbl-scope">${conf.scope}</td>
-      <td class="tbl-date">${conf.dateLabel}</td>
-      <td class="tbl-deadline ${passed ? 'passed' : ''}">${conf.deadlineLabel}</td>
-      <td>${conf.bk21 ? `<span class="badge ${conf.bk21 === '최우수' ? 'badge-top' : conf.bk21 === '우수' ? 'badge-good' : 'badge-good'}">${conf.bk21}</span>` : '<span style="color:var(--text3)">-</span>'}</td>
-      <td>${conf.if ? `<span class="badge badge-if">IF ${conf.if}</span>` : '<span style="color:var(--text3)">-</span>'}</td>
-      <td>${conf.journal ? `<span class="badge badge-journal">${conf.journal}</span>` : '<span style="color:var(--text3)">-</span>'}</td>
-    </tr>`;
-  }).join('');
+  const rows = [];
+  list.forEach(function(conf) {
+    const st = deadlineStatus(conf.deadlineDate);
+    const v  = venueData[conf.id] || {flag:'🌐', city:'', country:''};
+    let bk = conf.bk21 ? '<span class="badge ' + badgeClass(conf.bk21) + '">' + conf.bk21 + '</span>' : '<span style="color:var(--text3)">—</span>';
+    let ifBadge = conf.if ? '<span class="badge b-if">IF ' + conf.if + '</span>' : '<span style="color:var(--text3)">—</span>';
+    let jBadge  = conf.journal ? '<span class="badge b-journal">' + conf.journal + '</span>' : '<span style="color:var(--text3)">—</span>';
+    let dlStyle = 'color:#ff8c69';
+    if (st.passed) dlStyle = 'color:var(--text3);text-decoration:line-through';
+    rows.push(
+      '<tr style="border-left:2px solid ' + (conf.category==='domestic'?'var(--green)':'var(--accent)') + '">' +
+        '<td style="font-size:1.1rem">' + v.flag + '</td>' +
+        '<td style="font-family:\'JetBrains Mono\',monospace;font-weight:600"><a href="' + conf.url + '" target="_blank" style="color:var(--text);text-decoration:none">' + conf.abbr + ' ↗</a></td>' +
+        '<td><div style="font-size:.76rem;font-weight:600">' + conf.name + '</div><div style="font-size:.68rem;color:var(--text3)">' + (v.city && v.city!=='TBD' ? v.city + (v.country?', '+v.country:'') : '장소 미정') + '</div></td>' +
+        '<td style="font-size:.7rem;color:var(--text3);max-width:190px">' + conf.scope + '</td>' +
+        '<td style="font-size:.71rem;color:var(--green);font-family:\'JetBrains Mono\',monospace;white-space:nowrap">' + conf.dateLabel.split('·')[0].trim() + '</td>' +
+        '<td style="font-size:.71rem;' + dlStyle + ';font-family:\'JetBrains Mono\',monospace;white-space:nowrap">' + conf.deadlineLabel + '</td>' +
+        '<td>' + bk + '</td>' +
+        '<td>' + ifBadge + '</td>' +
+        '<td>' + jBadge + '</td>' +
+      '</tr>'
+    );
+  });
+  tbody.innerHTML = rows.join('');
 }
 
-function getFilteredSorted() {
-  let list = [...conferences];
-  if (activeFilter !== 'all') list = list.filter(c => c.category === activeFilter);
-  if (activeRank) list = list.filter(c => c.bk21 === activeRank);
-  if (activeJournal) list = list.filter(c => c.journal === activeJournal);
+// ── Filter + Sort ─────────────────────────────────────────────
+function getList() {
+  let list = conferences.slice();
+  if (activeFilter !== 'all') list = list.filter(function(c){return c.category === activeFilter;});
+  if (activeRank)    list = list.filter(function(c){return c.bk21 === activeRank;});
+  if (activeJournal) list = list.filter(function(c){return c.journal === activeJournal;});
   const q = document.getElementById('searchInput').value.toLowerCase();
-  if (q) list = list.filter(c =>
-    c.abbr.toLowerCase().includes(q) ||
-    c.name.toLowerCase().includes(q) ||
-    c.fullName.toLowerCase().includes(q) ||
-    c.scope.toLowerCase().includes(q)
-  );
-  // Sort
-  list.sort((a, b) => {
+  if (q) list = list.filter(function(c){
+    return c.abbr.toLowerCase().includes(q) || c.name.toLowerCase().includes(q) ||
+           c.fullName.toLowerCase().includes(q) || c.scope.toLowerCase().includes(q);
+  });
+  list.sort(function(a,b){
     if (currentSort === 'deadline') {
       const da = a.deadlineDate ? new Date(a.deadlineDate) : new Date('2099-01-01');
       const db = b.deadlineDate ? new Date(b.deadlineDate) : new Date('2099-01-01');
       return da - db;
     }
-    if (currentSort === 'date') return a.dateMonth - b.dateMonth;
-    if (currentSort === 'name') return a.abbr.localeCompare(b.abbr);
-    if (currentSort === 'if') return (b.if || 0) - (a.if || 0);
+    if (currentSort === 'date')    return a.dateMonth - b.dateMonth;
+    if (currentSort === 'name')    return a.abbr.localeCompare(b.abbr);
+    if (currentSort === 'if')      return (b.if||0) - (a.if||0);
     return 0;
   });
   return list;
 }
 
 function update() {
-  const list = getFilteredSorted();
+  const list = getList();
   renderCards(list);
   renderTable(list);
   document.getElementById('visibleCount').textContent = list.length;
-  // Count upcoming (within 60 days)
-  const soon = conferences.filter(c => {
-    const { passed, daysLeft } = getDeadlineStatus(c.deadlineDate);
-    return !passed && daysLeft !== null && daysLeft <= 60;
+  const soon = conferences.filter(function(c){
+    const s = deadlineStatus(c.deadlineDate);
+    return !s.passed && s.daysLeft !== null && s.daysLeft <= 60;
   }).length;
   document.getElementById('upcomingCount').textContent = soon;
 }
 
-// ─── Filter buttons ───
-document.querySelectorAll('[data-filter]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+// ── View Switch ───────────────────────────────────────────────
+function switchView(v) {
+  currentView = v;
+  document.getElementById('cardView').style.display = v==='card' ? '' : 'none';
+  document.getElementById('tableView').classList.toggle('vis', v==='table');
+  document.getElementById('cardViewBtn').classList.toggle('active', v==='card');
+  document.getElementById('tableViewBtn').classList.toggle('active', v==='table');
+}
+
+function tblSort(col) {
+  currentSort = col;
+  document.querySelectorAll('[data-sort]').forEach(function(b){b.classList.remove('active');});
+  update();
+}
+
+// ── Filter buttons ────────────────────────────────────────────
+document.querySelectorAll('[data-filter]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('[data-filter]').forEach(function(b){b.classList.remove('active');});
     btn.classList.add('active');
     activeFilter = btn.dataset.filter;
     update();
   });
 });
-
-document.querySelectorAll('[data-rank]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (activeRank === btn.dataset.rank) {
-      btn.classList.remove('active');
-      activeRank = null;
-    } else {
-      document.querySelectorAll('[data-rank]').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeRank = btn.dataset.rank;
-    }
+document.querySelectorAll('[data-rank]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    if (activeRank === btn.dataset.rank) { btn.classList.remove('active'); activeRank = null; }
+    else { document.querySelectorAll('[data-rank]').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); activeRank = btn.dataset.rank; }
     update();
   });
 });
-
-document.querySelectorAll('[data-journal]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (activeJournal === btn.dataset.journal) {
-      btn.classList.remove('active');
-      activeJournal = null;
-    } else {
-      document.querySelectorAll('[data-journal]').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeJournal = btn.dataset.journal;
-    }
+document.querySelectorAll('[data-journal]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    if (activeJournal === btn.dataset.journal) { btn.classList.remove('active'); activeJournal = null; }
+    else { document.querySelectorAll('[data-journal]').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); activeJournal = btn.dataset.journal; }
     update();
   });
 });
-
-document.querySelectorAll('[data-sort]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-sort]').forEach(b => b.classList.remove('active'));
+document.querySelectorAll('[data-sort]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('[data-sort]').forEach(function(b){b.classList.remove('active');});
     btn.classList.add('active');
     currentSort = btn.dataset.sort;
     update();
   });
 });
-
 document.getElementById('searchInput').addEventListener('input', update);
 
-// ─── View Switch ───
-function switchView(v) {
-  currentView = v;
-  document.getElementById('cardView').style.display = v === 'card' ? '' : 'none';
-  document.getElementById('tableView').classList.toggle('visible', v === 'table');
-  document.getElementById('cardViewBtn').classList.toggle('active', v === 'card');
-  document.getElementById('tableViewBtn').classList.toggle('active', v === 'table');
+// ── World Map (D3 + topojson) ─────────────────────────────────
+function orgColor(org) {
+  return {ACM:'#1068d9', IEEE:'#00a0e3', USENIX:'#e05c1a', EG:'#6abf69'}[org] || '#3ddc84';
 }
 
-// Table sort
-function sortTable(col) {
-  currentSort = col;
-  document.querySelectorAll('[data-sort]').forEach(b => b.classList.remove('active'));
-  update();
-}
+async function renderMap() {
+  const W = 900, H = 240;
+  const projection = d3.geoNaturalEarth1()
+    .scale(145)
+    .translate([W/2, H/2 + 10]);
+  const pathGen = d3.geoPath().projection(projection);
 
-// ─── AI Panel ───
-function toggleAIPanel() {
-  const panel = document.getElementById('aiPanel');
-  document.getElementById('settingsPanel').classList.remove('visible');
-  panel.classList.toggle('visible');
-  if (panel.classList.contains('visible')) document.getElementById('aiQuery').focus();
-}
+  // Draw graticule
+  const graticule = d3.geoGraticule().step([30, 30]);
+  const gratEl = document.getElementById('mapGraticule');
+  const gratPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+  gratPath.setAttribute('d', pathGen(graticule()));
+  gratEl.appendChild(gratPath);
 
-function toggleSettings() {
-  const panel = document.getElementById('settingsPanel');
-  document.getElementById('aiPanel').classList.remove('visible');
-  panel.classList.toggle('visible');
-  if (panel.classList.contains('visible')) {
-    const saved = localStorage.getItem('hci_api_key');
-    document.getElementById('apiKeyInput').value = saved || '';
-    updateApiKeyStatus();
-  }
-}
-
-function saveApiKey() {
-  const val = document.getElementById('apiKeyInput').value.trim();
-  if (val) { localStorage.setItem('hci_api_key', val); }
-  else { localStorage.removeItem('hci_api_key'); }
-  updateApiKeyStatus();
-  document.getElementById('settingsPanel').classList.remove('visible');
-  if (val) runAutoUpdate(true);
-}
-
-function updateApiKeyStatus() {
-  const key = localStorage.getItem('hci_api_key');
-  const el = document.getElementById('apiKeyStatus');
-  if (key) {
-    el.textContent = `✓ 저장됨: sk-ant-...${key.slice(-4)}`;
-    el.style.color = 'var(--accent2)';
-  } else {
-    el.textContent = '저장된 키 없음 — 자동 업데이트 비활성화';
-    el.style.color = 'var(--text3)';
-  }
-}
-
-function getApiKey() { return localStorage.getItem('hci_api_key'); }
-
-// ─── AI Query ───
-async function askAI() {
-  const query = document.getElementById('aiQuery').value.trim();
-  if (!query) return;
-  if (!getApiKey()) { alert('API 키를 먼저 설정해주세요 (⚙ 버튼)'); toggleSettings(); return; }
-  const submitBtn = document.getElementById('aiSubmit');
-  const loading = document.getElementById('aiLoading');
-  const result = document.getElementById('aiResult');
-  submitBtn.disabled = true;
-  loading.classList.add('visible');
-  result.classList.remove('visible');
-  result.textContent = '';
+  // Load world topojson
+  let world;
   try {
-    const ctx = conferences.map(c => `${c.abbr}: ${c.dateLabel}, 마감 ${c.deadlineLabel}`).join(' | ');
-    const data = await callAnthropic(
-      '당신은 HCI 학술대회 전문가입니다. 웹 검색으로 최신 정보를 찾아 한국어로 답변하세요. 날짜·장소·URL 포함, 불확실한 정보는 공식 웹사이트 확인 권고.',
-      `현황: ${ctx}
+    world = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(r){return r.json();});
+  } catch(e) { console.warn('Map load failed', e); renderDots(projection); return; }
 
-질문: ${query}`, 1200);
-    const text = data.content.map(i => i.type === 'text' ? i.text : '').filter(Boolean).join('
-');
-    result.textContent = text || '응답 없음';
-    result.classList.add('visible');
-    setUpdateTag('AI 응답', Date.now());
-  } catch(e) {
-    result.textContent = '오류: ' + e.message;
-    result.classList.add('visible');
-  } finally {
-    submitBtn.disabled = false;
-    loading.classList.remove('visible');
-  }
+  const countriesGeo = topojson.feature(world, world.objects.countries);
+  const bordersGeo   = topojson.mesh(world, world.objects.countries, function(a,b){return a!==b;});
+
+  const gEl = document.getElementById('mapCountries');
+  // Country fills
+  countriesGeo.features.forEach(function(feat){
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d', pathGen(feat) || '');
+    p.setAttribute('fill','#182840');
+    p.setAttribute('stroke','none');
+    gEl.appendChild(p);
+  });
+  // Borders
+  const borderPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+  borderPath.setAttribute('d', pathGen(bordersGeo) || '');
+  borderPath.setAttribute('fill','none');
+  borderPath.setAttribute('stroke','#243a5c');
+  borderPath.setAttribute('stroke-width','0.5');
+  gEl.appendChild(borderPath);
+
+  renderDots(projection);
 }
 
-document.getElementById('aiQuery').addEventListener('keydown', e => { if (e.key === 'Enter') askAI(); });
+function renderDots(projection) {
+  const g   = document.getElementById('venueDots');
+  const tip = document.getElementById('mapTip');
+  const svg = document.getElementById('worldMap');
+  const ns  = 'http://www.w3.org/2000/svg';
 
-// ─── Anthropic API helper ───
-async function callAnthropic(system, userMsg, maxTokens = 800) {
-  const key = getApiKey();
-  if (!key) throw new Error('API 키가 설정되지 않았습니다');
+  // Group by snapped location
+  const grouped = {};
+  conferences.forEach(function(conf){
+    const v = venueData[conf.id];
+    if (!v || !v.lat || v.city==='TBD' || v.city==='' || v.lat===0) return;
+    const key = Math.round(v.lat*2)/2 + ',' + Math.round(v.lon*2)/2;
+    if (!grouped[key]) grouped[key] = {v:v, abbrs:[]};
+    grouped[key].abbrs.push(conf.abbr);
+  });
+
+  Object.keys(grouped).forEach(function(key){
+    const info = grouped[key];
+    const v = info.v;
+    const proj = projection([v.lon, v.lat]);
+    if (!proj) return;
+    const x = proj[0], y = proj[1];
+    const color = orgColor(v.org);
+    const flagSrc = v.cc ? 'https://flagcdn.com/w20/' + v.cc + '.png' : null;
+
+    const grp = document.createElementNS(ns,'g');
+    grp.style.cursor = 'pointer';
+
+    const glow = document.createElementNS(ns,'circle');
+    glow.setAttribute('cx',x); glow.setAttribute('cy',y); glow.setAttribute('r','8');
+    glow.setAttribute('fill',color); glow.setAttribute('opacity','0.12');
+
+    const ring = document.createElementNS(ns,'circle');
+    ring.setAttribute('cx',x); ring.setAttribute('cy',y); ring.setAttribute('r','4');
+    ring.setAttribute('fill','none'); ring.setAttribute('stroke',color); ring.setAttribute('stroke-width','1.3');
+    ring.setAttribute('class','venue-ring');
+    ring.style.animationDelay = (Math.random()*2.5)+'s';
+
+    const dot = document.createElementNS(ns,'circle');
+    dot.setAttribute('cx',x); dot.setAttribute('cy',y); dot.setAttribute('r','4');
+    dot.setAttribute('fill',color);
+
+    grp.appendChild(glow); grp.appendChild(ring); grp.appendChild(dot);
+    g.appendChild(grp);
+
+    grp.addEventListener('mouseenter', function(){
+      const svgR = svg.getBoundingClientRect();
+      const secR = svg.parentElement.getBoundingClientRect();
+      const sx = svgR.width/900, sy = svgR.height/240;
+      const flagImg = flagSrc ? '<img src="' + flagSrc + '" style="width:16px;vertical-align:middle;margin-right:4px;border-radius:2px">' : '';
+      tip.innerHTML = '<b>' + flagImg + v.city + (v.country ? ', '+v.country : '') + '</b>' + info.abbrs.join(' · ');
+      tip.style.left = (x*sx + svgR.left - secR.left + 12) + 'px';
+      tip.style.top  = (y*sy + svgR.top  - secR.top  - 36) + 'px';
+      tip.classList.add('vis');
+    });
+    grp.addEventListener('mouseleave', function(){ tip.classList.remove('vis'); });
+  });
+}
+
+// ── API & Settings ────────────────────────────────────────────
+function getKey()  { return localStorage.getItem('hci_api_key'); }
+function toggleAIPanel() {
+  document.getElementById('settingsPanel').classList.remove('vis');
+  document.getElementById('aiPanel').classList.toggle('vis');
+  if (document.getElementById('aiPanel').classList.contains('vis'))
+    document.getElementById('aiQuery').focus();
+}
+function toggleSettings() {
+  document.getElementById('aiPanel').classList.remove('vis');
+  const p = document.getElementById('settingsPanel');
+  p.classList.toggle('vis');
+  if (p.classList.contains('vis')) {
+    document.getElementById('apiKeyInput').value = getKey() || '';
+    updateKeyStatus();
+  }
+}
+function saveApiKey() {
+  const v = document.getElementById('apiKeyInput').value.trim();
+  if (v) localStorage.setItem('hci_api_key', v);
+  else   localStorage.removeItem('hci_api_key');
+  updateKeyStatus();
+  document.getElementById('settingsPanel').classList.remove('vis');
+  if (v) runAutoUpdate(true);
+}
+function updateKeyStatus() {
+  const k = getKey();
+  const el = document.getElementById('apiKeyStatus');
+  if (k) { el.textContent = '✓ 저장됨: sk-ant-...'+k.slice(-4); el.style.color='var(--green)'; }
+  else   { el.textContent = '저장된 키 없음'; el.style.color='var(--text3)'; }
+}
+
+async function callAPI(system, user, maxTokens) {
+  const k = getKey();
+  if (!k) throw new Error('API 키가 설정되지 않았습니다');
   const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':k,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens,
-      system,
-      messages: [{ role: 'user', content: userMsg }],
-      tools: [{ type: 'web_search_20250305', name: 'web_search' }]
+      model:'claude-sonnet-4-20250514',
+      max_tokens: maxTokens || 800,
+      system: system,
+      messages:[{role:'user',content:user}],
+      tools:[{type:'web_search_20250305',name:'web_search'}]
     })
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error?.message || `HTTP ${res.status}`);
+    const e = await res.json().catch(function(){return {};});
+    throw new Error((e.error && e.error.message) || 'HTTP '+res.status);
   }
   return res.json();
 }
 
-// ─── Auto-update system ───
+async function askAI() {
+  const q = document.getElementById('aiQuery').value.trim();
+  if (!q) return;
+  if (!getKey()) { alert('API 키를 먼저 설정하세요 (⚙ 버튼)'); toggleSettings(); return; }
+  const btn = document.getElementById('aiSubmit');
+  const ld  = document.getElementById('aiLoading');
+  const rs  = document.getElementById('aiResult');
+  btn.disabled = true;
+  ld.classList.add('vis');
+  rs.classList.remove('vis');
+  rs.textContent = '';
+  try {
+    const ctx = conferences.map(function(c){return c.abbr+': '+c.dateLabel+', 마감 '+c.deadlineLabel;}).join(' | ');
+    const data = await callAPI(
+      'HCI 학술대회 전문가입니다. 웹 검색으로 최신 정보를 찾아 한국어로 답변하세요. 날짜·장소·URL 포함, 불확실한 정보는 공식 웹사이트 확인 권고.',
+      '현황: '+ctx+'\n\n질문: '+q, 1200
+    );
+    const txt = data.content.map(function(i){return i.type==='text'?i.text:'';}).filter(Boolean).join('\n');
+    rs.textContent = txt || '응답 없음';
+    rs.classList.add('vis');
+  } catch(e) {
+    rs.textContent = '오류: '+e.message;
+    rs.classList.add('vis');
+  } finally {
+    btn.disabled = false;
+    ld.classList.remove('vis');
+  }
+}
+document.getElementById('aiQuery').addEventListener('keydown', function(e){ if(e.key==='Enter') askAI(); });
+
+// ── Auto-update ───────────────────────────────────────────────
 const CACHE_KEY    = 'hci_conf_updates';
 const CACHE_TS_KEY = 'hci_conf_updated_at';
-const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7일
+const CACHE_TTL    = 7*24*60*60*1000;
+const AUTO_SYS     = 'You are an HCI conference database updater. Search the web and return ONLY a JSON array (no markdown, no preamble). Each element: {"id":"...","dateLabel":"...","deadlineLabel":"...","deadlineDate":"YYYY-MM-DD or null","url":"...","changed":true/false}. Keep original values for anything you could not verify. Today: '+new Date().toISOString().slice(0,10)+'.';
 
-const AUTO_SYS = `You are an HCI conference database updater. Search the web and return ONLY a JSON array (no markdown, no preamble) with the latest verified info for each conference. Each element: {"id":"...","dateLabel":"...","deadlineLabel":"...","deadlineDate":"YYYY-MM-DD or null","url":"...","changed":true/false}. Keep original values for anything you couldn't verify. Today: ${new Date().toISOString().slice(0,10)}.`;
-
-async function runAutoUpdate(force = false) {
-  if (!getApiKey()) return;
-  const lastRun = parseInt(localStorage.getItem(CACHE_TS_KEY) || '0');
-  const stale = Date.now() - lastRun > CACHE_TTL_MS;
-  if (!force && !stale) { applyCachedUpdates(); if (lastRun) setUpdateTag('캐시 적용', lastRun); return; }
-
-  const bar = document.getElementById('autoUpdateBar');
-  const spinner = document.getElementById('autoUpdateSpinner');
-  const statusEl = document.getElementById('autoUpdateStatus');
-  const progressEl = document.getElementById('autoUpdateProgress');
-  bar.style.display = 'block';
-  spinner.style.display = 'inline-block';
-  statusEl.textContent = '학술대회 정보 최신화 중...';
+async function runAutoUpdate(force) {
+  if (!getKey()) return;
+  const last = parseInt(localStorage.getItem(CACHE_TS_KEY)||'0');
+  if (!force && (Date.now()-last < CACHE_TTL)) { applyCached(); if(last) setTag('캐시 적용',last); return; }
+  const bar = document.getElementById('updBar');
+  const spn = document.getElementById('updSpinner');
+  const sts = document.getElementById('updStatus');
+  const prg = document.getElementById('updProgress');
+  bar.classList.add('show');
+  spn.style.display = 'inline-block';
+  sts.textContent = '학술대회 정보 최신화 중...';
   document.getElementById('autoUpdateLabel').textContent = '동기화 중...';
   document.getElementById('autoUpdateBtn').disabled = true;
-
   const batches = [conferences.slice(0,14), conferences.slice(14)];
-  let allResults = [];
+  let all = [];
   try {
-    for (let b = 0; b < batches.length; b++) {
-      progressEl.textContent = `배치 ${b+1}/${batches.length} (${batches[b].length}개 학회)`;
-      const list = batches[b].map(c =>
-        `id:${c.id} abbr:"${c.abbr}" name:"${c.name}" currentDate:"${c.dateLabel}" currentDeadline:"${c.deadlineLabel}" currentDeadlineDate:"${c.deadlineDate||''}" url:"${c.url}"`
-      ).join('
-');
-      const data = await callAnthropic(AUTO_SYS, `Verify and update:
-${list}`, 3000);
-      const text = data.content.map(i => i.type==='text'?i.text:'').filter(Boolean).join('');
-      try {
-        allResults = allResults.concat(JSON.parse(text.replace(/```json|```/g,'').trim()));
-      } catch(pe) { console.warn('Parse err batch',b,text.slice(0,200)); }
+    for (let b=0; b<batches.length; b++) {
+      prg.textContent = '배치 '+(b+1)+'/2 ('+batches[b].length+'개)';
+      const list = batches[b].map(function(c){
+        return 'id:'+c.id+' abbr:"'+c.abbr+'" currentDate:"'+c.dateLabel+'" currentDeadline:"'+c.deadlineLabel+'" currentDeadlineDate:"'+(c.deadlineDate||'')+'" url:"'+c.url+'"';
+      }).join('\n');
+      const data = await callAPI(AUTO_SYS, 'Verify:\n'+list, 3000);
+      const txt = data.content.map(function(i){return i.type==='text'?i.text:'';}).filter(Boolean).join('');
+      try { all = all.concat(JSON.parse(txt.replace(/```json|```/g,'').trim())); }
+      catch(pe){ console.warn('parse err batch',b); }
     }
-    if (allResults.length > 0) {
-      localStorage.setItem(CACHE_KEY, JSON.stringify(allResults));
+    if (all.length) {
+      localStorage.setItem(CACHE_KEY, JSON.stringify(all));
       localStorage.setItem(CACHE_TS_KEY, String(Date.now()));
-      const changes = applyCachedUpdates();
-      const changesEl = document.getElementById('autoUpdateChanges');
-      if (changes.length) {
-        changesEl.innerHTML = '✅ 변경됨: ' + changes.map(c=>`<strong>${c}</strong>`).join(', ');
-        changesEl.style.display = 'block';
-      } else {
-        changesEl.innerHTML = '✓ 모든 정보가 최신입니다';
-        changesEl.style.display = 'block';
-      }
-      statusEl.textContent = `✓ ${allResults.length}개 학회 확인 완료`;
-      setUpdateTag('방금 업데이트', Date.now());
+      const changed = applyCached();
+      const chEl = document.getElementById('updChanges');
+      if (changed.length) { chEl.innerHTML='✅ 변경됨: '+changed.map(function(s){return '<strong>'+s+'</strong>';}).join(', '); chEl.style.display='block'; }
+      else { chEl.textContent='✓ 모든 정보가 최신입니다'; chEl.style.display='block'; }
+      sts.textContent='✓ '+all.length+'개 학회 확인 완료';
+      setTag('방금 업데이트', Date.now());
     } else {
-      statusEl.textContent = '⚠ 응답을 파싱할 수 없었습니다. 재시도해주세요.';
+      sts.textContent='⚠ 응답을 파싱할 수 없었습니다.';
     }
   } catch(e) {
-    statusEl.innerHTML = `⚠ 오류: ${e.message}`;
-    if (e.message.includes('API 키')) statusEl.innerHTML += ' — <a href="#" onclick="toggleSettings();return false" style="color:var(--accent)">API 키 설정</a>';
+    sts.textContent='⚠ 오류: '+e.message;
   } finally {
-    spinner.style.display = 'none';
-    progressEl.textContent = '';
-    document.getElementById('autoUpdateLabel').textContent = '최신 정보 동기화';
-    document.getElementById('autoUpdateBtn').disabled = false;
+    spn.style.display='none';
+    prg.textContent='';
+    document.getElementById('autoUpdateLabel').textContent='동기화';
+    document.getElementById('autoUpdateBtn').disabled=false;
   }
 }
 
-function applyCachedUpdates() {
+function applyCached() {
   const raw = localStorage.getItem(CACHE_KEY);
   if (!raw) return [];
-  let updates; try { updates = JSON.parse(raw); } catch(e) { return []; }
+  let updates;
+  try { updates = JSON.parse(raw); } catch(e){ return []; }
   const changed = [];
-  updates.forEach(u => {
-    const conf = conferences.find(c => c.id === u.id);
-    if (!conf) return;
+  updates.forEach(function(u){
+    const c = conferences.find(function(x){return x.id===u.id;});
+    if (!c) return;
     let dirty = false;
-    if (u.dateLabel && u.dateLabel !== conf.dateLabel) { conf.dateLabel = u.dateLabel; dirty = true; }
-    if (u.deadlineLabel && u.deadlineLabel !== conf.deadlineLabel) { conf.deadlineLabel = u.deadlineLabel; dirty = true; }
-    if (u.deadlineDate !== undefined && u.deadlineDate !== conf.deadlineDate) conf.deadlineDate = u.deadlineDate;
-    if (u.url && u.url !== conf.url) conf.url = u.url;
-    if (dirty) changed.push(conf.abbr);
+    if (u.dateLabel && u.dateLabel!==c.dateLabel) { c.dateLabel=u.dateLabel; dirty=true; }
+    if (u.deadlineLabel && u.deadlineLabel!==c.deadlineLabel) { c.deadlineLabel=u.deadlineLabel; dirty=true; }
+    if (u.deadlineDate!==undefined) c.deadlineDate=u.deadlineDate;
+    if (u.url && u.url!==c.url) c.url=u.url;
+    if (dirty) changed.push(c.abbr);
   });
   update();
   return [...new Set(changed)];
 }
 
-function setUpdateTag(label, ts) {
+function setTag(label, ts) {
   const d = new Date(ts);
   document.getElementById('lastUpdated').textContent =
-    `${label}: ${d.toLocaleDateString('ko-KR')} ${d.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})}`;
+    label+': '+d.toLocaleDateString('ko-KR')+' '+d.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
 }
 
 function manualAutoUpdate() { runAutoUpdate(true); }
 
-// ─── Init ───
-updateApiKeyStatus();
+// ── Init ──────────────────────────────────────────────────────
 document.getElementById('totalCount').textContent = conferences.length;
-document.getElementById('intlCount').textContent = conferences.filter(c => c.category === 'international').length;
-document.getElementById('domCount').textContent = conferences.filter(c => c.category === 'domestic').length;
+updateKeyStatus();
 update();
+renderMap();  // async - D3 loads world data
 
-// 캐시 즉시 적용 후 → API 키 있으면 staleness 확인
-applyCachedUpdates();
-const lastTs = parseInt(localStorage.getItem(CACHE_TS_KEY) || '0');
-if (lastTs) setUpdateTag('캐시 적용', lastTs);
-if (getApiKey()) {
+applyCached();
+const lastTs = parseInt(localStorage.getItem(CACHE_TS_KEY)||'0');
+if (lastTs) setTag('캐시 적용', lastTs);
+if (getKey()) {
   runAutoUpdate(false);
 } else {
-  const bar = document.getElementById('autoUpdateBar');
-  bar.style.display = 'block';
-  document.getElementById('autoUpdateSpinner').style.display = 'none';
-  document.getElementById('autoUpdateStatus').innerHTML =
-    '⚙ <a href="#" onclick="toggleSettings();return false" style="color:var(--accent)">API 키를 설정</a>하면 자동으로 최신 정보를 가져옵니다 (7일마다 자동 갱신)';
+  const bar = document.getElementById('updBar');
+  bar.classList.add('show');
+  document.getElementById('updSpinner').style.display='none';
+  document.getElementById('updStatus').innerHTML =
+    '⚙ <a href="#" onclick="toggleSettings();return false" style="color:var(--accent)">API 키를 설정</a>하면 자동으로 최신 정보를 가져옵니다 (7일마다 갱신)';
 }
 </script>
 </body>
