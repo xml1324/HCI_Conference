@@ -186,6 +186,183 @@ tr:hover td{background:rgba(255,255,255,.015)}
   .map-title-overlay h1{font-size:1.15rem}
   .header-stats{display:none}
 }
+
+/* ── FEEDBACK ────────────────────────────────────────────────── */
+.fab {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+.fab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #b07fff 0%, #7c4dff 100%);
+  border: none;
+  border-radius: 28px;
+  padding: 10px 18px;
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(176,127,255,.45);
+  transition: transform .2s, box-shadow .2s;
+  white-space: nowrap;
+}
+.fab-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(176,127,255,.6);
+}
+.fab-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  align-items: flex-end;
+  animation: fabIn .2s ease both;
+}
+@keyframes fabIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+.fab-mini-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 7px 14px;
+  color: var(--text);
+  font-size: .78rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  transition: all .15s;
+  white-space: nowrap;
+}
+.fab-mini-btn:hover { border-color: var(--purple); color: var(--purple); }
+
+/* Modal backdrop */
+.modal-back {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(4,8,18,.75);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  animation: fadeIn .2s ease;
+}
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.modal-back.hidden { display: none; }
+
+/* Modal box */
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 18px;
+  width: 100%; max-width: 500px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.7);
+  animation: modalIn .25s cubic-bezier(.34,1.3,.64,1) both;
+  overflow: hidden;
+}
+@keyframes modalIn { from{opacity:0;transform:scale(.92)} to{opacity:1;transform:none} }
+
+.modal-header {
+  padding: 1.3rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.05rem; font-weight: 700;
+  display: flex; align-items: center; gap: .5rem;
+}
+.modal-close {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text2); width: 28px; height: 28px;
+  border-radius: 50%; font-size: .9rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.modal-close:hover { border-color: var(--red); color: var(--red); }
+
+.modal-body { padding: 1.2rem 1.5rem 1.5rem; }
+
+.form-row { margin-bottom: 1rem; }
+.form-label {
+  display: block; font-size: .72rem; color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase; letter-spacing: .05em;
+  margin-bottom: .4rem;
+}
+.form-input {
+  width: 100%;
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); padding: .5rem .8rem;
+  border-radius: var(--r); font-size: .82rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  outline: none; transition: border-color .15s;
+  box-sizing: border-box;
+}
+.form-input:focus { border-color: var(--purple); }
+.form-textarea {
+  width: 100%; min-height: 110px; resize: vertical;
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); padding: .5rem .8rem;
+  border-radius: var(--r); font-size: .82rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  outline: none; transition: border-color .15s;
+  box-sizing: border-box; line-height: 1.6;
+}
+.form-textarea:focus { border-color: var(--purple); }
+
+.type-pills { display: flex; gap: .5rem; flex-wrap: wrap; }
+.type-pill {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text2); padding: .3rem .8rem;
+  border-radius: 20px; font-size: .78rem; cursor: pointer;
+  transition: all .15s; font-family: 'Noto Sans KR', sans-serif;
+}
+.type-pill:hover { border-color: var(--purple); color: var(--purple); }
+.type-pill.active { background: var(--purple); border-color: var(--purple); color: #000; font-weight: 600; }
+
+.form-submit {
+  width: 100%;
+  background: linear-gradient(135deg, #b07fff 0%, #7c4dff 100%);
+  border: none; color: #fff; padding: .65rem;
+  border-radius: var(--r); font-size: .88rem; font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif; cursor: pointer;
+  transition: opacity .2s; margin-top: .5rem;
+}
+.form-submit:hover { opacity: .88; }
+.form-submit:disabled { opacity: .45; cursor: not-allowed; }
+
+.form-hint {
+  font-size: .7rem; color: var(--text3);
+  margin-top: .5rem; line-height: 1.5;
+  font-family: 'JetBrains Mono', monospace;
+}
+.modal-setup {
+  background: var(--bg3); border: 1px solid rgba(176,127,255,.3);
+  border-radius: var(--r); padding: .9rem 1rem;
+  margin-bottom: 1rem; font-size: .76rem; line-height: 1.7;
+  color: var(--text2);
+}
+.modal-setup a { color: var(--accent); }
+.modal-setup code {
+  background: var(--bg); padding: .1rem .35rem;
+  border-radius: 3px; font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem; color: var(--purple);
+}
+.send-status {
+  display: none; text-align: center; padding: 2rem 1rem;
+  flex-direction: column; align-items: center; gap: .8rem;
+}
+.send-status.vis { display: flex; }
+.send-status-icon { font-size: 2.5rem; }
+.send-status-msg { font-size: .88rem; color: var(--text2); line-height: 1.6; }
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
@@ -927,6 +1104,143 @@ if (getKey()) {
   document.getElementById('updStatus').innerHTML =
     '⚙ <a href="#" onclick="toggleSettings();return false" style="color:var(--accent)">API 키를 설정</a>하면 자동으로 최신 정보를 가져옵니다 (7일마다 갱신)';
 }
+
+
+// ── Feedback (GitHub Issues) ─────────────────────────────────
+var selectedType = 'bug';
+
+// ★ 레포 URL을 아래에 입력하세요
+var REPO_URL = 'https://github.com/xml1324/HCI_Conference';
+
+function openFeedback(type) {
+  document.querySelectorAll('.type-pill').forEach(function(p) {
+    p.classList.toggle('active', p.dataset.type === type);
+  });
+  selectedType = type;
+  var titles = {bug:'🐛 버그 제보', suggestion:'💡 개선 제안', data:'📋 정보 오류 수정', other:'💬 기타 문의'};
+  document.getElementById('modalTitle').textContent = titles[type] || '✉ 피드백';
+  resetFeedbackForm();
+
+  document.getElementById('feedbackModal').classList.remove('hidden');
+  setTimeout(function() { document.getElementById('fbTitle').focus(); }, 120);
+}
+
+function closeModal() {
+  document.getElementById('feedbackModal').classList.add('hidden');
+}
+function handleBackdropClick(e) {
+  if (e.target === document.getElementById('feedbackModal')) closeModal();
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+function selectType(el) {
+  document.querySelectorAll('.type-pill').forEach(function(p) { p.classList.remove('active'); });
+  el.classList.add('active');
+  selectedType = el.dataset.type;
+}
+
+
+function submitFeedback() {
+  var title   = document.getElementById('fbTitle').value.trim();
+  var message = document.getElementById('fbMessage').value.trim();
+  if (!title) { document.getElementById('fbTitle').focus(); return; }
+
+  var typeLabel = {bug:'🐛 버그', suggestion:'💡 개선 제안', data:'📋 정보 오류', other:'💬 기타'}[selectedType] || '💬 기타';
+  var labelMap  = {bug:'bug', suggestion:'enhancement', data:'data-error', other:'question'};
+
+  var repo = REPO_URL;
+  var issueTitle = '[' + typeLabel + '] ' + title;
+  var issueBody  = '## ' + typeLabel + '\n\n' + (message || '(내용 없음)') + '\n\n---\n_HCI 대시보드 피드백 폼에서 제출됨_';
+
+  var url;
+  if (repo) {
+    // GitHub Issues pre-fill URL
+    url = repo.replace(/\/+$/, '') + '/issues/new'
+      + '?title=' + encodeURIComponent(issueTitle)
+      + '&body='  + encodeURIComponent(issueBody)
+      + '&labels=' + encodeURIComponent(labelMap[selectedType] || 'feedback');
+  } else {
+    // Fallback: mailto
+    url = 'mailto:woojoo.kim@kangwon.ac.kr'
+      + '?subject=' + encodeURIComponent(issueTitle)
+      + '&body='    + encodeURIComponent(issueBody.replace(/##\s/g, '').replace(/\n/g, '%0A'));
+  }
+
+  window.open(url, '_blank');
+  showSuccess(repo);
+}
+
+function showSuccess(usedRepo) {
+  document.getElementById('feedbackForm').style.display = 'none';
+  var st = document.getElementById('sendStatus');
+  st.classList.add('vis');
+  document.getElementById('sendIcon').textContent = usedRepo ? '🐙' : '📧';
+  document.getElementById('sendMsg').textContent  = usedRepo
+    ? 'GitHub Issues 페이지가 열렸습니다.\n내용을 확인하고 Submit issue 버튼을 눌러주세요!'
+    : 'GitHub 레포 URL을 설정하면 Issues로 바로 연결됩니다.\n지금은 이메일 클라이언트가 열렸습니다.';
+}
+
+function resetFeedbackForm() {
+  document.getElementById('feedbackForm').style.display = 'block';
+  document.getElementById('sendStatus').classList.remove('vis');
+  document.getElementById('fbTitle').value   = '';
+  document.getElementById('fbMessage').value = '';
+}
+
 </script>
+
+<!-- ── FEEDBACK FAB ──────────────────────────────────────────── -->
+<div class="fab">
+  <button class="fab-btn" onclick="openFeedback('bug')">
+    ✉ 피드백 보내기
+  </button>
+</div>
+
+<!-- ── FEEDBACK MODAL ─────────────────────────────────────────── -->
+<div class="modal-back hidden" id="feedbackModal" onclick="handleBackdropClick(event)">
+  <div class="modal" id="feedbackModalBox">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">✉ 피드백 보내기</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+
+
+      <!-- Form -->
+      <div id="feedbackForm">
+        <div class="form-row">
+          <label class="form-label">유형</label>
+          <div class="type-pills">
+            <button class="type-pill active" data-type="bug"        onclick="selectType(this)">🐛 버그 제보</button>
+            <button class="type-pill"         data-type="suggestion" onclick="selectType(this)">💡 개선 제안</button>
+            <button class="type-pill"         data-type="data"       onclick="selectType(this)">📋 정보 오류</button>
+            <button class="type-pill"         data-type="other"      onclick="selectType(this)">💬 기타</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">제목</label>
+          <input type="text" class="form-input" id="fbTitle" placeholder="한 줄로 요약해주세요">
+        </div>
+        <div class="form-row">
+          <label class="form-label">내용 (선택)</label>
+          <textarea class="form-textarea" id="fbMessage" placeholder="버그라면 재현 방법, 제안이라면 구체적인 내용을 적어주세요." style="min-height:90px"></textarea>
+        </div>
+        <button class="form-submit" id="fbSubmit" onclick="submitFeedback()">피드백 보내기 🐙</button>
+        <div class="form-hint">제목·내용이 미리 채워진 GitHub Issue 페이지가 열립니다. Submit issue 버튼을 누르면 접수 완료!</div>
+
+      </div>
+
+      <!-- Success state -->
+      <div class="send-status" id="sendStatus">
+        <div class="send-status-icon" id="sendIcon">🐙</div>
+        <div class="send-status-msg" id="sendMsg"></div>
+        <button class="form-submit" onclick="resetFeedbackForm()" style="max-width:160px;padding:.45rem">다시 보내기</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
