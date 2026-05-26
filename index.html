@@ -373,7 +373,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 <div class="map-section">
   <div class="map-title-overlay">
     <h1>🌐 HCI 학술대회</h1>
-    <p>국내외 학술대회 통합 일정표 <span class="update-tag" id="lastUpdated">2026-05-25 자동 업데이트</span></p>
+    <p>국내외 학술대회 통합 일정표 <span class="update-tag" id="lastUpdated">2026-05-26 자동 업데이트</span></p>
   </div>
   <svg id="worldMap" viewBox="0 0 900 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
     <rect width="900" height="240" fill="#080e1c"/>
@@ -564,7 +564,7 @@ const conferences = [
   {id:'iss',        abbr:'ISS',            name:'ACM ISS',            fullName:'ACM International Conference on Interactive Surfaces and Spaces', scope:'인터랙티브 표면 및 대형 디스플레이 연구',              category:'international', bk21:null,     if:null, dateMonth:11, dateLabel:'2026년 November, 23-26, 2026 · Turin, Italy',             deadlineLabel:'2026년 7월 22일',           deadlineDate:'2026-07-22', journal:'PACMHCI', url:'https://iss.acm.org/2026/authors/papers/'},
   {id:'soups',      abbr:'SOUPS',          name:'USENIX SOUPS',       fullName:'USENIX Symposium On Usable Privacy and Security',               scope:'보안·프라이버시 분야 사용성 — 인증, 개인정보, 접근성',  category:'international', bk21:null,     if:null, dateMonth:8,  dateLabel:'2026년 8월 23-26일 · 유럽',     deadlineLabel:'2026년 2월 12일 ✓완료',            deadlineDate:'2026-02-12', journal:null,      url:'https://soups.page/'},
   {id:'percom',     abbr:'PerCom',         name:'IEEE PerCom',        fullName:'IEEE International Conference on Pervasive Computing and Communications', scope:'퍼베이시브 컴퓨팅 인프라 및 서비스',         category:'international', bk21:'우수',   if:3,    dateMonth:3,  dateLabel:'2027년 3월 8-12일 · 고아, 인도',              deadlineLabel:'2026년 9월 말 (예정)',              deadlineDate:'2026-09-30', journal:null,      url:'https://percom.org/'},
-  {id:'mobilehci',  abbr:'MobileHCI',      name:'ACM MobileHCI',      fullName:'ACM International Conference on Mobile Human-Computer Interaction', scope:'모바일 인터페이스 및 사용자 경험 연구',            category:'international', bk21:null,     if:null, dateMonth:8,  dateLabel:'2026년 August 31 - September 03, 2025 · Swansea, Wales, United Kingdom',                  deadlineLabel:'2026년 1월 29일 (완료) · 초록 2026-01-22',                deadlineDate:null,         journal:null,      url:'https://mobilehci.acm.org/2026/submit/papers.html'},
+  {id:'mobilehci',  abbr:'MobileHCI',      name:'ACM MobileHCI',      fullName:'ACM International Conference on Mobile Human-Computer Interaction', scope:'모바일 인터페이스 및 사용자 경험 연구',            category:'international', bk21:null,     if:null, dateMonth:8,  dateLabel:'2026년 August 31 - September 03, 2026 · Swansea, Wales, United Kingdom',                  deadlineLabel:'2026년 1월 29일 (완료) · 초록 2026-01-22',                deadlineDate:null,         journal:null,      url:'https://mobilehci.acm.org/2026/submit/papers.html'},
   {id:'whc',        abbr:'WHC',            name:'World Haptics',      fullName:'IEEE World Haptics Conference',                                  scope:'촉각 상호작용 및 햅틱 시스템 연구',                     category:'international', bk21:'우수',   if:null, dateMonth:7,  dateLabel:'2025년 July, 8-11, 2025 · Suwon, Korea ✓완료',              deadlineLabel:'2025년 1월 31일 (완료)',              deadlineDate:'2025-01-31', journal:null,      url:'https://2025.worldhaptics.org'},
   {id:'chiplay',    abbr:'CHI PLAY',       name:'ACM CHI PLAY',       fullName:'ACM Annual Symposium on Computer-Human Interaction in Play',    scope:'게임 및 엔터테인먼트 중심 HCI 연구',                    category:'international', bk21:null,     if:null, dateMonth:10, dateLabel:'2025년 October, 13-16, 2025 · Pittsburgh, Pennsylvania, USA ✓완료',    deadlineLabel:'2025년 2월 19일 (완료)',            deadlineDate:'2025-02-19', journal:'PACMHCI', url:'https://chiplay.acm.org/2025/'},
   {id:'eurovis',    abbr:'EuroVis',        name:'EuroVis',            fullName:'Eurographics Conference on Visualization',                       scope:'유럽 기반 시각화 기법 및 연구',                          category:'international', bk21:'우수',   if:null, dateMonth:6,  dateLabel:'2026년 6월 8-12일 (Nottingham, UK)',              deadlineLabel:'2025년 11월 말 (완료)',             deadlineDate:'2025-11-30', journal:'CGF',     url:'https://eurovis.org.uk/'},
@@ -583,7 +583,7 @@ let activeRank   = null;
 let activeJournal = null;
 let currentSort  = 'deadline';
 let currentView  = 'card';
-const TODAY = new Date('2026-05-25');
+const TODAY = new Date('2026-05-26');
 
 // ── Helpers ──────────────────────────────────────────────────
 function deadlineStatus(ds) {
