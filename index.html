@@ -373,7 +373,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 <div class="map-section">
   <div class="map-title-overlay">
     <h1>🌐 HCI 학술대회</h1>
-    <p>국내외 학술대회 통합 일정표 <span class="update-tag" id="lastUpdated">2026-06-30 자동 업데이트</span></p>
+    <p>국내외 학술대회 통합 일정표 <span class="update-tag" id="lastUpdated">2026-07-01 자동 업데이트</span></p>
   </div>
   <svg id="worldMap" viewBox="0 0 900 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
     <rect width="900" height="240" fill="#080e1c"/>
@@ -550,7 +550,7 @@ const conferences = [
   {id:'ieeeVR',     abbr:'IEEE VR',        name:'IEEE VR',            fullName:'IEEE Conference on Virtual Reality and 3D User Interfaces',      scope:'가상현실 및 3D 사용자 인터페이스 연구',                  category:'international', bk21:'최우수', if:2,    dateMonth:3,  dateLabel:'2026년 3월 21-25일 · 대구 ✓완료',    deadlineLabel:'2025년 9월 중순 (완료)',            deadlineDate:'2025-09-15', journal:'TVCG',    url:'https://ieeevr.org/2026/'},
   {id:'iui',        abbr:'IUI',            name:'ACM IUI',            fullName:'ACM Conference on Intelligent User Interfaces',                  scope:'인공지능과 사용자 인터페이스의 결합',                    category:'international', bk21:'우수',   if:2,    dateMonth:2,  dateLabel:'2027년 February 8-11, 2027 · Helsinki, Finland',  deadlineLabel:'2026년 8월 20일 · 초록 2026-08-13',             deadlineDate:'2026-08-20', journal:null,      url:'https://iui.acm.org/2027/call-for-papers/'},
   {id:'siggraph',   abbr:'SIGGRAPH',       name:'ACM SIGGRAPH',       fullName:'ACM Special Interest Group on Computer GRAPHics and IT',        scope:'그래픽스 및 인터랙티브 기술 최고 권위',                  category:'international', bk21:'최우수', if:4,    dateMonth:12,  dateLabel:'2026년 December, 1-4, 2026 · Kuala Lumpur, Malaysia',  deadlineLabel:'2026년 5월 12일 (완료) · 초록 2026-05-05',            deadlineDate:'2026-05-12', journal:null,      url:'https://asia.siggraph.org/2026/submissions/technical-papers/'},
-  {id:'eics',       abbr:'EICS',           name:'ACM EICS',           fullName:'ACM SIGCHI Symposium on Engineering Interactive Computing Sys.', scope:'인터랙티브 시스템 공학 및 설계 방법론',                  category:'international', bk21:null,     if:null, dateMonth:6,  dateLabel:'2026년 June 30 - July 3, 2026 · Patras, Greece', deadlineLabel:'2026년 2월 13일 (완료)',            deadlineDate:'2026-02-13', journal:'PACMHCI', url:'https://eics.acm.org/2026/'},
+  {id:'eics',       abbr:'EICS',           name:'ACM EICS',           fullName:'ACM SIGCHI Symposium on Engineering Interactive Computing Sys.', scope:'인터랙티브 시스템 공학 및 설계 방법론',                  category:'international', bk21:null,     if:null, dateMonth:6,  dateLabel:'2026년 June 30 - July 3, 2026 · Patras, Greece ✓완료', deadlineLabel:'2026년 2월 13일 (완료)',            deadlineDate:'2026-02-13', journal:'PACMHCI', url:'https://eics.acm.org/2026/'},
   {id:'cui',        abbr:'CUI',            name:'ACM CUI',            fullName:'ACM Conference on Conversational User Interfaces',              scope:'대화형 에이전트 및 음성 인터페이스 연구',                category:'international', bk21:null,     if:null, dateMonth:7,  dateLabel:'2026년 July, 21–24, 2026 · Bremen, Germany',  deadlineLabel:'2026년 3월 5일 (완료) · 초록 2026-02-26',            deadlineDate:'2026-03-05', journal:'PACMHCI', url:'https://cui.acm.org/2026/'},
   {id:'vis',        abbr:'IEEE VIS',       name:'IEEE VIS',           fullName:'IEEE Visualization and Visual Analytics',                       scope:'데이터 시각화 및 시각적 분석 기법',                      category:'international', bk21:'최우수', if:4,    dateMonth:11, dateLabel:'2026년 11월 8-13일 · 보스턴',             deadlineLabel:'2026년 3월 31일 · 초록 3월 21일 (완료)', deadlineDate:'2026-03-31', journal:'TVCG',    url:'https://ieeevis.org/year/2026/welcome'},
   {id:'uist',       abbr:'UIST',           name:'ACM UIST',           fullName:'ACM Symposium on User Interface Software and Technology',       scope:'혁신적 UI 소프트웨어 및 하드웨어 기술',                  category:'international', bk21:'최우수', if:2,    dateMonth:11, dateLabel:'2026년 November 2nd - November 5th, 2026 · Detroit, USA',    deadlineLabel:'2026년 3월 31일 (완료) · 초록 2026-03-24',            deadlineDate:'2026-03-31', journal:null,      url:'https://uist.acm.org/2026'},
@@ -583,7 +583,7 @@ let activeRank   = null;
 let activeJournal = null;
 let currentSort  = 'deadline';
 let currentView  = 'card';
-const TODAY = new Date('2026-06-30');
+const TODAY = new Date('2026-07-01');
 
 // ── Helpers ──────────────────────────────────────────────────
 function deadlineStatus(ds) {
