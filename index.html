@@ -373,7 +373,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 <div class="map-section">
   <div class="map-title-overlay">
     <h1>🌐 HCI 학술대회</h1>
-    <p>국내외 학술대회 통합 일정표 <span class="update-tag" id="lastUpdated">2026-07-22 자동 업데이트</span></p>
+    <p>국내외 학술대회 통합 일정표 <span class="update-tag" id="lastUpdated">2026-07-23 자동 업데이트</span></p>
   </div>
   <svg id="worldMap" viewBox="0 0 900 240" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
     <rect width="900" height="240" fill="#080e1c"/>
@@ -561,7 +561,7 @@ const conferences = [
   {id:'siggraph_asia', abbr:'SIGGRAPH Asia', name:'ACM SIGGRAPH Asia', fullName:'ACM SIGGRAPH Asia',                                           scope:'아시아권 최대 그래픽스 및 인터랙티브',                   category:'international', bk21:'최우수', if:null, dateMonth:12, dateLabel:'2026년 12월 1-4일 · 쿠알라룸푸르', deadlineLabel:'2026년 5월 12일 · 초록 5월 5일',             deadlineDate:'2026-05-12', journal:null,      url:'https://asia.siggraph.org/2026/'},
   {id:'cscw',       abbr:'CSCW',           name:'ACM CSCW',           fullName:'ACM Conference on Computer-Supported Cooperative Work',         scope:'협업 지원 시스템 및 사회적 컴퓨팅 연구',                 category:'international', bk21:'우수',   if:3,    dateMonth:10, dateLabel:'2026년 October, 10-14, 2026 · Salt Lake City, Utah, USA', deadlineLabel:'2025년 5월 14일 (완료)', deadlineDate:'2025-05-14', journal:'PACMHCI', url:'https://cscw.acm.org/2026/papers.html'},
   {id:'vrst',       abbr:'VRST',           name:'ACM VRST',           fullName:'ACM Symposium on Virtual Reality Software and Technology',      scope:'가상현실 시스템 소프트웨어 및 기술',                     category:'international', bk21:'우수',   if:1,    dateMonth:11, dateLabel:'2026년 November, 16-18, 2026 · Sendai, Japan',             deadlineLabel:'2026년 6월 24일 (완료) · 초록 2026-06-17',                  deadlineDate:'2026-06-24', journal:null,      url:'https://vrst.acm.org/vrst2026/'},
-  {id:'iss',        abbr:'ISS',            name:'ACM ISS',            fullName:'ACM International Conference on Interactive Surfaces and Spaces', scope:'인터랙티브 표면 및 대형 디스플레이 연구',              category:'international', bk21:null,     if:null, dateMonth:11, dateLabel:'2026년 November, 23-26, 2026 · Turin, Italy',             deadlineLabel:'2026년 7월 22일',           deadlineDate:'2026-07-22', journal:'PACMHCI', url:'https://iss.acm.org/2026/authors/papers/'},
+  {id:'iss',        abbr:'ISS',            name:'ACM ISS',            fullName:'ACM International Conference on Interactive Surfaces and Spaces', scope:'인터랙티브 표면 및 대형 디스플레이 연구',              category:'international', bk21:null,     if:null, dateMonth:11, dateLabel:'2026년 November, 23-26, 2026 · Turin, Italy',             deadlineLabel:'2026년 7월 22일 (완료)',           deadlineDate:'2026-07-22', journal:'PACMHCI', url:'https://iss.acm.org/2026/authors/papers/'},
   {id:'soups',      abbr:'SOUPS',          name:'USENIX SOUPS',       fullName:'USENIX Symposium On Usable Privacy and Security',               scope:'보안·프라이버시 분야 사용성 — 인증, 개인정보, 접근성',  category:'international', bk21:null,     if:null, dateMonth:8,  dateLabel:'2026년 8월 23-26일 · 유럽',     deadlineLabel:'2026년 2월 12일 ✓완료',            deadlineDate:'2026-02-12', journal:null,      url:'https://soups.page/'},
   {id:'percom',     abbr:'PerCom',         name:'IEEE PerCom',        fullName:'IEEE International Conference on Pervasive Computing and Communications', scope:'퍼베이시브 컴퓨팅 인프라 및 서비스',         category:'international', bk21:'우수',   if:3,    dateMonth:3,  dateLabel:'2027년 3월 8-12일 · 고아, 인도',              deadlineLabel:'2026년 9월 말 (예정)',              deadlineDate:'2026-09-30', journal:null,      url:'https://percom.org/'},
   {id:'mobilehci',  abbr:'MobileHCI',      name:'ACM MobileHCI',      fullName:'ACM International Conference on Mobile Human-Computer Interaction', scope:'모바일 인터페이스 및 사용자 경험 연구',            category:'international', bk21:null,     if:null, dateMonth:8,  dateLabel:'2026년 August 31 - September 03, 2026 · Swansea, Wales, United Kingdom',                  deadlineLabel:'2026년 1월 29일 (완료) · 초록 2026-01-22',                deadlineDate:null,         journal:null,      url:'https://mobilehci.acm.org/2026/submit/papers.html'},
@@ -583,7 +583,7 @@ let activeRank   = null;
 let activeJournal = null;
 let currentSort  = 'deadline';
 let currentView  = 'card';
-const TODAY = new Date('2026-07-22');
+const TODAY = new Date('2026-07-23');
 
 // ── Helpers ──────────────────────────────────────────────────
 function deadlineStatus(ds) {
